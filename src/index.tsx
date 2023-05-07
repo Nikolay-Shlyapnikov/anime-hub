@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <Router>
         <Routes>
-            <Route key={"route1"} path="/" element={<MainPage />} />
+            <Route key={"route1"} path="/" element={<MainPage/>} />
             <Route key={"route2"} path="/login" element={<LoginPage />} />
             <Route key={"route3"} path="/signup" element={<SignupPage />} />
         </Routes>

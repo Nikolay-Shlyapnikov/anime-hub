@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./form.css";
+import "../css/form.css";
 import { Link, useNavigate } from "react-router-dom";
 
 interface registrationFormState {
@@ -39,7 +39,8 @@ const RegistrationForm = () => {
         setState((prevState) => ({ ...prevState, email: event.target.value }));
     };
     const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setState((prevState) => ({ ...prevState, password: event.target.value }));
+        setState(
+            (prevState) => ({ ...prevState, password: event.target.value }));
     };
     const passwordRepeatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState((prevState) => ({
@@ -97,15 +98,16 @@ const RegistrationForm = () => {
                 email: state.email,
             })
         }
-        // await fetch('http://10.0.0.65:5000/signup', requestOptions)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         this.setState({
-        //             errorLogin: [data.loginError, data.registrationLoginError],
-        //             errorPassword: data.passwordError,
-        //             errorEmail: [data.mailError, data.registrationMailError],
-        //         });
-        //     });
+        await fetch('http://10.0.0.65:5000/signup', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                setState((prevState) => ({
+                    ...prevState,
+                    errorLogin: [data.loginError, data.registrationLoginError],
+                    errorPassword: data.passwordError,
+                    errorEmail: [data.mailError, data.registrationMailError],
+                }));
+            });
         navigate('/login', { state: { registration: true } });
     }
 
