@@ -54,6 +54,20 @@ const RegistrationForm = () => {
     };
     const fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files![0];
+        const fileToBase64 = (file: File): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const base64 = reader.result?.toString();
+                    if (base64) {
+                        resolve(base64.split(",")[1]); // Remove data:image/png;base64, from base64 string
+                    } else {
+                        reject("Ошибка загрузки фото, попробуйте ещё раз");
+                    }
+                };
+            });
+        }
         if (file) {
             fileToBase64(file).then(
                 (fileInBase64) => {
@@ -68,20 +82,7 @@ const RegistrationForm = () => {
                 }
             );
         }
-        function fileToBase64(file: File): Promise<string> {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const base64 = reader.result?.toString();
-                    if (base64) {
-                        resolve(base64.split(",")[1]); // Remove data:image/png;base64, from base64 string
-                    } else {
-                        reject("Ошибка загрузки фото, попробуйте ещё раз");
-                    }
-                };
-            });
-        }
+
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -101,14 +102,19 @@ const RegistrationForm = () => {
         await fetch('http://10.0.0.65:5000/signup', requestOptions)
             .then(response => response.json())
             .then(data => {
-                setState((prevState) => ({
-                    ...prevState,
-                    errorLogin: [data.loginError, data.registrationLoginError],
-                    errorPassword: data.passwordError,
-                    errorEmail: [data.mailError, data.registrationMailError],
-                }));
+                if (data.registrationError == '') {
+                    navigate('/login', { state: { registration: true } });
+                }
+                setState(prevState => {
+                    return {
+                        ...prevState,
+                        errorLogin: [data.loginError, data.registrationLoginError],
+                        errorPassword: data.passwordError,
+                        errorEmail: [data.mailError, data.registrationMailError],
+                    };
+                });
             });
-        navigate('/login', { state: { registration: true } });
+
     }
 
         const options = Array.from({ length: 94 }, (_, i) => <option key={i}>{i+7}</option>);

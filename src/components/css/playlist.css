@@ -1,0 +1,21 @@
+.playlists{
+    border: 2px solid #fda022;
+    border-radius: 20px;
+    padding: 10px;
+    background: #fda022;
+    color: #FFFFFF;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+.playlists__title{
+    grid-column: 1/3;
+    font-size: 25px;
+    font-weight: 700;
+    text-align: center;
+}
+.playlist{
+    border-radius: 15px;
+    border: 1px solid #FFF;
+    padding: 10px;
+}

@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from "./pages/mainPage";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
+import ProfilePage from "./pages/profilePage";
 
 
 const root = ReactDOM.createRoot(
@@ -18,6 +19,7 @@ root.render(
             <Route key={"route1"} path="/" element={<MainPage/>} />
             <Route key={"route2"} path="/login" element={<LoginPage />} />
             <Route key={"route3"} path="/signup" element={<SignupPage />} />
+            <Route key={"route4"} path="/profile" element={<ProfilePage />} />
         </Routes>
     </Router>
 );

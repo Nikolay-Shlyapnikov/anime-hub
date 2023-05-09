@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/header";
 import Catalog from "../components/catalog";
 import '../components/css/style.css'
@@ -7,25 +7,35 @@ import '../components/css/null.css'
 import Sidebar from "../components/sidebar";
 
 interface mainPageInterface {
-    filter: string;
+    filterType: string;
+    filterGenre: string;
     sort: string;
     sortItemState: string;
     sortBy: string;
-    filterValues: Array<string>;
+    filterGenreArray: Array<string>;
+    filterTypeArray: Array<string>;
 }
 function MainPage() {
-    const filterArr = ['TV Сериал', 'Клип', 'Спешл', 'Фильм', 'Сериал'];
+    const filterType = ['TV Сериал', 'Клип', 'Спешл', 'Фильм', 'Сериал'];
+    const filterGenre = ['Детектив', 'Триллер', 'Сёнен', 'Психология', 'Драма'];
     const [mainState, setState] = useState<mainPageInterface>({
-        filter: '',
+        filterType: '',
+        filterGenre: '',
         sort: '',
         sortItemState:'',
         sortBy: '',
-        filterValues: filterArr
+        filterGenreArray: filterGenre,
+        filterTypeArray: filterType
     });
-    const changeFilter = (event: React.MouseEvent<HTMLElement>) => {
+    const location = useLocation();
+    console.log(location.state);
+    const changeFilterType = (event: React.MouseEvent<HTMLElement>) => {
         const filterValue = event.currentTarget.dataset.value!
-        setState((prevState)=> ({...prevState, filter: filterValue}));
-        console.log(mainState);
+        setState((prevState)=> ({...prevState, filterType: filterValue}));
+    };
+    const changeFilterGenre = (event: React.MouseEvent<HTMLElement>) => {
+        const filterValue = event.currentTarget.dataset.value!
+        setState((prevState)=> ({...prevState, filterGenre: filterValue}));
     };
     const changeSort = (event: React.MouseEvent<HTMLElement>) => {
         let sortTarget = event.currentTarget.dataset.value!;
@@ -49,8 +59,12 @@ function MainPage() {
             sortBy = '';
             sortTarget = '';
         }
+        if(sortTarget == ''){
+            sortValue = '';
+            sortBy = '';
+            sortTarget = '';
+        }
         setState((prevState)=> ({...prevState,sort: sortTarget, sortItemState: sortValue, sortBy: sortBy}));
-        console.log(mainState);
     }
     return (
         <div>
@@ -83,13 +97,16 @@ function MainPage() {
             />
             <main className="main-page__container container">
                 <Sidebar
-                    onChangeFilter={changeFilter}
-                    filter={mainState.filter}
-                    filterArray={mainState.filterValues}
+                    onChangeFilterType={changeFilterType}
+                    onChangeFilterGenre={changeFilterGenre}
+                    filterGenre={mainState.filterGenre}
+                    filterType={mainState.filterType}
+                    filterGenreArray={mainState.filterGenreArray}
+                    filterTypeArray={mainState.filterTypeArray}
                     onChangeSort={changeSort}
                     sort={mainState.sortItemState}
                 ></Sidebar>
-                {<Catalog filter={mainState.filter} sortBy={mainState.sortBy} sort={mainState.sort}></Catalog>}
+                {<Catalog filterType={mainState.filterType} filterGenre={mainState.filterGenre} sortBy={mainState.sortBy} sort={mainState.sort}></Catalog>}
             </main>
         </div>
 

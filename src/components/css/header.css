@@ -20,8 +20,8 @@ body {
 }
 
 .page-header__logo {
-    color: white;
     text-decoration: none;
+    color: #FFF;
 }
 
 .page-header__logo:hover {

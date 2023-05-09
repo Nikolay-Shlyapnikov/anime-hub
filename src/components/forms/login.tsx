@@ -1,21 +1,19 @@
 import React, { useState} from "react";
 import '../css/form.css';
-import {Link, useLocation} from "react-router-dom";
-
+import {Link, useLocation, useNavigate } from "react-router-dom";
 
 interface LoginFormState {
     login: string;
     password: string;
-    errorLogin: Array<string>;
-    errorPassword: Array<string>;
+    errorAuth: string;
 }
 
 const LoginForm = () => {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [errorLogin, setErrorLogin] = useState<Array<string>>([]);
-    const [errorPassword, setErrorPassword] = useState<Array<string>>([]);
+    const [errorAuth, setErrorAuth] = useState<string>('');
     const location = useLocation();
+    const navigate = useNavigate();
     let registration;
     location.state ? registration = location.state : registration = false;
     const loginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +37,7 @@ const LoginForm = () => {
         fetch('http://10.0.0.65:5000/login', requestOptions)
             .then(response => response.json())
             .then(data => {
-                setErrorLogin([data.loginError, data.authError]);
-                setErrorPassword(data.passwordError);
-                console.log(data);
+                data.authError ? setErrorAuth(data.authError) :  navigate('/profile', {state: data});
             });
     }
 
@@ -57,20 +53,14 @@ const LoginForm = () => {
                         <p className={'input__title'}>Введите логин:</p>
                         <input className={'input'} placeholder={'Ivanov'}  type="text" value={login} onInput={loginChange} />
                         {
-                            errorLogin && errorLogin.length > 0  ?
-                                errorLogin.map((error, index) => (
-                                    <p key={'loginError'+index}  className={'input__error'}>{error}</p>
-                                )): null
+                            errorAuth && errorAuth === 'Пользователь с таким логином не зарегистрирован' ? <p className={'input__error'}>{errorAuth}</p> : null
                         }
                     </div>
                     <div className={'input__wrapper'}>
                         <p className={'input__title'}>Введите пароль:</p>
                         <input className={'input'} placeholder={'qwerty'} type="text" value={password} onInput={passwordChange} />
                         {
-                            errorPassword && errorPassword.length > 0 ?
-                                errorPassword.map((error, index) =>
-                                    (<p key={'passwordError'+index}  className={'input__error'}>{error}</p>
-                                    )) : null
+                            errorAuth && errorAuth === 'Пароль не верный' ? <p className={'input__error'}>{errorAuth}</p> : null
                         }
                     </div>
                     <button className={'button'} type="submit" >Войти</button>
