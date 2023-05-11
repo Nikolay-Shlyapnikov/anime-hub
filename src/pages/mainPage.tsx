@@ -38,7 +38,6 @@ function MainPage() {
         filterTypeArray: filterType
     });
     const location = useLocation();
-    console.log(location.state);
     const changeFilterType = (event: React.MouseEvent<HTMLElement>) => {
         const filterNumber = Number(event.currentTarget.dataset.value!)
         const filterText = event.currentTarget.textContent!
@@ -78,7 +77,6 @@ function MainPage() {
         }
         setState((prevState)=> ({...prevState,sort: sortTarget, sortItemState: sortValue, sortBy: sortBy}));
     }
-    console.log(mainState);
     return (
         <div>
             <Header

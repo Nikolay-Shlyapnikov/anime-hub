@@ -1,14 +1,29 @@
-import React from 'react';
+import React,{ useState, useEffect } from 'react';
 import './css/catalog.css'
-import {Link} from "react-router-dom";
+import CatalogItem from "./catalogItem";
 interface CatalogInterface {
     sort: string;
     filterType: {text: string, number: number};
     filterGenre: {text: string, number: number};
     sortBy: string;
 }
-
+interface Post {
+        id: number,
+        createdAt: string,
+        title: string,
+        description: string,
+        year: string,
+        imagePath: string,
+        videoPath:string,
+        episodeCount:number,
+        episodeDuration:string,
+        userId: number,
+        typeId: number,
+        rating: number,
+        genreId: number
+}
 const Catalog = (catalogProps: CatalogInterface) => {
+
     let sortSetting: {text: string, number: number};
     catalogProps.sort === 'date' ? sortSetting = {text: 'дате', number: 1}:
         catalogProps.sort === 'title' ? sortSetting ={text: 'алфавиту', number: 3}:
@@ -17,43 +32,39 @@ const Catalog = (catalogProps: CatalogInterface) => {
 
     let sortBy: {text: string, number: number};
     catalogProps.sortBy === 'DESC' ?  sortBy = {text:'По убыванию', number: 1} : sortBy = {text:'По возрастанию', number: 0};
-    const getSortedPosts = async () =>{
+    const [posts, setPosts] = useState<Post[]>([])
+    const getSortedPosts = async () => {
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-               sort: sortSetting.number,
-               sortBy: sortBy.number,
-               filterType: catalogProps.filterType.number,
-               filterGenre: catalogProps.filterGenre.number
+                sort: sortSetting.number,
+                sortBy: sortBy.number,
+                filterType: catalogProps.filterType.number,
+                filterGenre: catalogProps.filterGenre.number
             })
-        }
-        const arraySortedPosts = [];
-        await fetch('http://10.0.0.65:5000/sortedPosts', requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                arraySortedPosts.push(data);
-                console.log(data);
-            });
-    }
-    getSortedPosts();
-    const getPosts = async () =>{
-        const requestOptions = {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        }
-        const arrayPosts: {id: number, year: string, title: string, genre: string}[] = [];
-        await fetch('http://10.0.0.65:5000/posts', requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                data.postInfo.forEach((post: {id: number, year: string, title: string, genre: string}) =>{
-                    arrayPosts.push(post);
-                });
+        };
 
-            });
-        return arrayPosts
-    }
-    getPosts();
+        const response = await fetch('http://10.0.0.65:5000/sortedPosts', requestOptions);
+        const data = await response.json();
+        console.log(data);
+        setPosts(data);
+    };
+    useEffect(() => {
+        getSortedPosts();
+    }, [catalogProps.sort,catalogProps.sortBy,catalogProps.filterType,catalogProps.filterGenre ]);
+    const postsItems = posts.map((post, index) => {
+           return(
+               <CatalogItem
+                   key={post.id}
+                   id={post.id}
+                   title={post.title}
+                   year={post.year}
+                   type={post.typeId}
+                   imagePath={post.imagePath}
+               />
+           )
+    });
     return (
         <section className="catalog">
             <h2 className="catalog__title">Аниме</h2>
@@ -62,17 +73,7 @@ const Catalog = (catalogProps: CatalogInterface) => {
             {sortSetting.text !== 'default' && sortSetting.text !== '' ? <p className="catalog__subtitle">Сортировка по {sortSetting.text} ({sortBy.text})</p> : null}
             { }
             <div className="catalog__wrapper">
-                <Link to='/post/1'>
-                    <div className="catalog__item catalog__item--black">
-                        <img src="" alt="" className="catalog__item-img"/>
-                        <p className="catalog__item-title">Стальной алхимик</p>
-                        <div className="catalog__item-wrapper">
-                            <p className="catalog__item-genre">TV сериал</p>
-                            <p className="catalog__item-year">2002</p>
-                        </div>
-                    </div>
-                </Link>
-
+                {postsItems}
             </div>
         </section>
     );
