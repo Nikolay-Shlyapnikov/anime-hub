@@ -3,7 +3,7 @@ interface filterItemInterface{
     onChangeFilter: React.MouseEventHandler<HTMLElement>
     textContent: string;
     isActive: string;
-    dataValue: string;
+    dataValue: number;
 }
 
 const FilterItem = (props:filterItemInterface) => {

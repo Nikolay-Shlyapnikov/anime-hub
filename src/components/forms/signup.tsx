@@ -99,6 +99,7 @@ const RegistrationForm = () => {
                 email: state.email,
             })
         }
+        console.log(requestOptions.body);
         await fetch('http://10.0.0.65:5000/signup', requestOptions)
             .then(response => response.json())
             .then(data => {

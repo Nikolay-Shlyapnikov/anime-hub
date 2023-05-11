@@ -63,7 +63,7 @@ function ProfilePage() {
                 </div>
                <div className='user__info-wrapper'>
                    <div className='profile__left-side'>
-                       <img className='profile__avatar' src={''} alt='Фото профиля'/>
+                       <img className='profile__avatar' src={'/image/avatar/rezume.jpg'} alt='Фото профиля'/>
                        <p className='profile__text'>
                            <svg className={'icon'} x="0px" y="0px" viewBox="0 0 485.213 485.212" >
                                <g>

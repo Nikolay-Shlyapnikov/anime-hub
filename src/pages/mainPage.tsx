@@ -7,20 +7,30 @@ import '../components/css/null.css'
 import Sidebar from "../components/sidebar";
 
 interface mainPageInterface {
-    filterType: string;
-    filterGenre: string;
+    filterType: {text: string, number: number};
+    filterGenre: {text: string, number: number};
     sort: string;
     sortItemState: string;
     sortBy: string;
-    filterGenreArray: Array<string>;
-    filterTypeArray: Array<string>;
+    filterGenreArray: {text: string, number: number}[];
+    filterTypeArray: {text: string, number: number}[];
 }
 function MainPage() {
-    const filterType = ['TV Сериал', 'Клип', 'Спешл', 'Фильм', 'Сериал'];
-    const filterGenre = ['Детектив', 'Триллер', 'Сёнен', 'Психология', 'Драма'];
+    const filterType = [
+        {text: 'TV Сериал', number: 1},
+        {text: 'Клип', number: 2},
+        {text: 'Спешл', number: 3},
+        {text: 'Фильм', number: 4},
+        {text: 'Сериал', number: 5}];
+    const filterGenre = [
+        {text: 'Детектив', number: 1},
+        {text: 'Триллер', number: 2},
+        {text: 'Сёнен', number: 3},
+        {text: 'Психология', number: 4},
+        {text: 'Драма', number: 5}];
     const [mainState, setState] = useState<mainPageInterface>({
-        filterType: '',
-        filterGenre: '',
+        filterType: { text: '', number: 0},
+        filterGenre: { text: '', number: 0},
         sort: '',
         sortItemState:'',
         sortBy: '',
@@ -30,12 +40,14 @@ function MainPage() {
     const location = useLocation();
     console.log(location.state);
     const changeFilterType = (event: React.MouseEvent<HTMLElement>) => {
-        const filterValue = event.currentTarget.dataset.value!
-        setState((prevState)=> ({...prevState, filterType: filterValue}));
+        const filterNumber = Number(event.currentTarget.dataset.value!)
+        const filterText = event.currentTarget.textContent!
+        setState((prevState)=> ({...prevState, filterType: {text: filterText, number: filterNumber} }));
     };
     const changeFilterGenre = (event: React.MouseEvent<HTMLElement>) => {
-        const filterValue = event.currentTarget.dataset.value!
-        setState((prevState)=> ({...prevState, filterGenre: filterValue}));
+        const filterNumber = Number(event.currentTarget.dataset.value!)
+        const filterText = event.currentTarget.textContent!
+        setState((prevState)=> ({...prevState, filterGenre: {text: filterText, number: filterNumber} }));
     };
     const changeSort = (event: React.MouseEvent<HTMLElement>) => {
         let sortTarget = event.currentTarget.dataset.value!;
@@ -66,6 +78,7 @@ function MainPage() {
         }
         setState((prevState)=> ({...prevState,sort: sortTarget, sortItemState: sortValue, sortBy: sortBy}));
     }
+    console.log(mainState);
     return (
         <div>
             <Header
