@@ -1,13 +1,16 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import '../css/form.css';
-import {Link, useLocation, useNavigate } from "react-router-dom";
-
-interface LoginFormState {
-    login: string;
-    password: string;
-    errorAuth: string;
+import { Link, useLocation, useNavigate } from "react-router-dom";
+export interface userInfoInterface {
+    createdData: string
+    personAge: number
+    personAvatar: string
+    personEmail: string
+    personId: number
+    personLogin: string
+    personRole: number
+    xxxContent: number
 }
-
 const LoginForm = () => {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -23,7 +26,10 @@ const LoginForm = () => {
     const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     }
-
+    const setUser = (data:userInfoInterface) =>{
+        localStorage.setItem('user', JSON.stringify(data));
+        navigate('/profile');
+    }
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const requestOptions = {
@@ -37,7 +43,7 @@ const LoginForm = () => {
         fetch('http://10.0.0.65:5000/login', requestOptions)
             .then(response => response.json())
             .then(data => {
-                data.authError ? setErrorAuth(data.authError) :  navigate('/profile', {state: data});
+                data.authError ? setErrorAuth(data.authError) : setUser(data);
             });
     }
 

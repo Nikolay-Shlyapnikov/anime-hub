@@ -48,6 +48,7 @@ body {
 .page-header__left-side {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .page-header__left-side a {
@@ -56,11 +57,20 @@ body {
 }
 
 .page-header__left-side svg {
-    height: 30px;
-    width: 30px;
+    height: 24px;
+    width: 24px;
     fill: #FFF;
 }
-
+.header__avatar{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid #FFF;
+}
+.page-header__exit-wrapper{
+    display: flex;
+    align-items: center;
+}
 .page-header__left-side .cls-1 {
     stroke: #FFF;
     stroke-width: 2px;

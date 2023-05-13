@@ -8,19 +8,19 @@ interface CatalogInterface {
     sortBy: string;
 }
 interface Post {
-        id: number,
-        createdAt: string,
-        title: string,
-        description: string,
-        year: string,
-        imagePath: string,
-        videoPath:string,
-        episodeCount:number,
-        episodeDuration:string,
-        userId: number,
-        typeId: number,
-        rating: number,
-        genreId: number
+    id: number,
+    createdAt: string,
+    title: string,
+    description: string,
+    year: string,
+    imagePath: string,
+    videoPath:string,
+    episodeCount:number,
+    episodeDuration:string,
+    userId: number,
+    typeId: number,
+    rating: number,
+    genreId: number,
 }
 const Catalog = (catalogProps: CatalogInterface) => {
 
@@ -32,8 +32,12 @@ const Catalog = (catalogProps: CatalogInterface) => {
 
     let sortBy: {text: string, number: number};
     catalogProps.sortBy === 'DESC' ?  sortBy = {text:'По убыванию', number: 1} : sortBy = {text:'По возрастанию', number: 0};
+
+
     const [posts, setPosts] = useState<Post[]>([])
+    const [isLoading, setIsLoading] = useState(false);
     const getSortedPosts = async () => {
+        setIsLoading(true);
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -44,27 +48,40 @@ const Catalog = (catalogProps: CatalogInterface) => {
                 filterGenre: catalogProps.filterGenre.number
             })
         };
-
-        const response = await fetch('http://10.0.0.65:5000/sortedPosts', requestOptions);
-        const data = await response.json();
-        console.log(data);
-        setPosts(data);
+        try {
+            const response = await fetch('http://10.0.0.65:5000/sortedPosts', requestOptions);
+            const data:Post[] = await response.json();
+            setPosts(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
     };
     useEffect(() => {
         getSortedPosts();
     }, [catalogProps.sort,catalogProps.sortBy,catalogProps.filterType,catalogProps.filterGenre ]);
-    const postsItems = posts.map((post, index) => {
-           return(
-               <CatalogItem
-                   key={post.id}
-                   id={post.id}
-                   title={post.title}
-                   year={post.year}
-                   type={post.typeId}
-                   imagePath={post.imagePath}
-               />
-           )
-    });
+    let catalogContent;
+    if(posts.length == 0){
+        catalogContent = <p className="catalog__title">Посты не найдены</p>;
+    }
+    if (posts.length > 0){
+        catalogContent = (posts as Post[]).map((post, index) => {
+            return (
+                <CatalogItem
+                    key={'post' + post.id}
+                    id={post.id}
+                    title={post.title}
+                    year={post.year}
+                    type={post.typeId}
+                    imagePath={post.imagePath}
+                />
+            )
+        });
+    }
+    if(isLoading){
+        catalogContent = <p>Загрузка</p>;
+    }
     return (
         <section className="catalog">
             <h2 className="catalog__title">Аниме</h2>
@@ -73,7 +90,7 @@ const Catalog = (catalogProps: CatalogInterface) => {
             {sortSetting.text !== 'default' && sortSetting.text !== '' ? <p className="catalog__subtitle">Сортировка по {sortSetting.text} ({sortBy.text})</p> : null}
             { }
             <div className="catalog__wrapper">
-                {postsItems}
+                {catalogContent}
             </div>
         </section>
     );
