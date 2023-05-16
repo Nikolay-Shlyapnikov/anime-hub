@@ -8,6 +8,7 @@ import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
 import ProfilePage from "./pages/profilePage";
 import PostPage from "./pages/postPage";
+import PostFormPage from "./pages/addProfilePage";
 
 
 const root = ReactDOM.createRoot(
@@ -22,6 +23,7 @@ root.render(
                 <Route key={"route3"} path="/signup" element={<SignupPage />} />
                 <Route key={"route4"} path="/profile" element={<ProfilePage />} />
                 <Route key={"route5"} path="/post" element={<PostPage />} />
+                <Route key={"route6"} path="/postForm" element={<PostFormPage />} />
             </Routes>
         </Router>
 );

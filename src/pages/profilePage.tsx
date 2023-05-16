@@ -4,7 +4,6 @@ import '../components/css/style.css'
 import '../components/css/null.css'
 import '../components/css/profile.css'
 import Playlist from "../components/playlist";
-import Redirect from "../components/redirect";
 interface profilePageInterface {
     XXX: boolean;
 }
@@ -74,10 +73,7 @@ function ProfilePage() {
                         <p style={{margin: '13px 0 0 0'}} className='profile__text'>Количество отзывов: {countReview}</p>
                    </div>
                    <div className='profile__right-side'>
-                       <div className='profile__checkbox-wrapper profile__text'>
-                           {userInfo.personAge > 18 ? <button className={`profile__checkbox ${XXX ? 'active': ''}`} onClick={changeXXX}></button> : ''}
-                           Отображать контент 18+?
-                       </div>
+                           {userInfo.personAge > 18 ? <div className='profile__checkbox-wrapper profile__text'><button className={`profile__checkbox ${XXX ? 'active': ''}`} onClick={changeXXX}></button> Отображать контент 18+?</div> : ''}
                        <button className='profile__button'>Создать плейлист</button>
                    </div>
                </div>

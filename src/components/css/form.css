@@ -3,15 +3,17 @@
 }
 .form{
     max-width: 500px;
-    margin: 50px auto 0 auto;
+    margin: 50px auto 50px auto;
     border: 1px solid #fda022;
     border-radius: 15px;
 
     gap: 20px;
     padding: 20px;
 }
-.title{
+.form__title{
     text-align: center;
+    font-size: 30px;
+    margin: 30px 0 0 0;
 }
 .inner__wrapper{
     width: 80%;
@@ -90,4 +92,12 @@
 }
 .title.green{
     color: green;
+}
+
+.filter__select{
+    width: auto;
+    padding: 0 10px 0 0;
+}
+.textarea{
+    resize: vertical;
 }

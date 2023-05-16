@@ -1,12 +1,12 @@
 import React from 'react';
-import LoginForm from "../components/forms/login";
+import PostForm from "../components/forms/postForm";
 import Header from "../components/header";
-function LoginPage() {
+function PostFormPage() {
     return (
         <div className="loginPage">
             <Header/>
-            <LoginForm></LoginForm>
+            <PostForm></PostForm>
         </div>
     );
 }
-export default LoginPage;
+export default PostFormPage;

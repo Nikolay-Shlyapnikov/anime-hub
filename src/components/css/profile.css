@@ -44,13 +44,17 @@
     margin: 5px;
 }
 .profile__checkbox{
-    width: 24px;
-    height: 24px;
-    background: #FFFFFF;
-    outline: none;
-    border: 1px solid #fda022;
-    margin: 5px;
-    position: relative;
+     width: 24px;
+     height: 24px;
+     background: #FFFFFF;
+     outline: none;
+     border: 1px solid #fda022;
+     margin: 5px;
+     position: relative;
+ }
+.profile__checkbox-wrapper{
+    display: flex;
+    align-items: center;
 }
 .profile__checkbox::before, .profile__checkbox::after{
     content: '';
