@@ -16,7 +16,7 @@ const CatalogItem = (props: catalogItemInteface) =>{
 
     return (
         <div key={'post'+props.id} onClick={postItemCLick} className={'catalog__item'}>
-            <img src={`public/image/post/${postImagePath}`} alt='Фото аниме' className="catalog__item-img"/>
+            <img src={postImagePath} alt='Фото аниме' className="catalog__item-img"/>
                 <p className="catalog__item-title">{props.title}</p>
                 <div className="catalog__item-wrapper">
                     <p className="catalog__item-type">{props.type}</p>
