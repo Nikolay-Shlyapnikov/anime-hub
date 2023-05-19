@@ -40,7 +40,7 @@ const LoginForm = () => {
                 password: password,
             })
         };
-        fetch('http://10.0.0.65:5000/login', requestOptions)
+        fetch('http://94.102.126.157:5000/login', requestOptions)
             .then(response => response.json())
             .then(data => {
                 data.authError ? setErrorAuth(data.authError) : setUser(data);

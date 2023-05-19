@@ -49,7 +49,7 @@ const Catalog = (catalogProps: CatalogInterface) => {
             })
         };
         try {
-            const response = await fetch('http://10.0.0.65:5000/sortedPosts', requestOptions);
+            const response = await fetch('http://94.102.126.157:5000/sortedPosts', requestOptions);
             const data:Post[] = await response.json();
             setPosts(data);
         } catch (error) {

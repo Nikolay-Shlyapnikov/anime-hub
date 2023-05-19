@@ -113,7 +113,7 @@ const RegistrationForm = () => {
                 genreId: state.genreId,
             })
         }
-        await fetch('http://10.0.0.65:5000/addPost', requestOptions)
+        await fetch('http://94.102.126.157:5000/addPost', requestOptions)
             .then(response => response.json())
             .then(data => {
                 if (data.success == 'true') {
@@ -130,7 +130,7 @@ const RegistrationForm = () => {
                 headers: { "Content-Type": "application/json" },
             };
             try {
-                const response = await fetch(`http://10.0.0.65:5000/filters`, requestOptions);
+                const response = await fetch(`http://94.102.126.157:5000/filters`, requestOptions);
                 const data = await response.json();
                 setGenre(data.genreList);
                 setTypes(data.typeList);

@@ -32,7 +32,7 @@ const PostPage = () =>{
             headers: { "Content-Type": "application/json" },
         };
         try {
-            const response = await fetch(`http://10.0.0.65:5000/post/${postId}`, requestOptions);
+            const response = await fetch(`http://94.102.126.157:5000/post/${postId}`, requestOptions);
             const data:Post = await response.json();
             setPost(data);
         } catch (error) {

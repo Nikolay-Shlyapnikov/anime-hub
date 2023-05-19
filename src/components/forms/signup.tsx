@@ -100,7 +100,7 @@ const RegistrationForm = () => {
             })
         }
         console.log(requestOptions.body);
-        await fetch('http://10.0.0.65:5000/signup', requestOptions)
+        await fetch('http://94.102.126.157:5000/signup', requestOptions)
             .then(response => response.json())
             .then(data => {
                 if (data.registrationError == '') {

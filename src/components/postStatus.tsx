@@ -23,7 +23,7 @@ const PostStatus = (props:propsInterface) => {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         };
-        await fetch(`http://10.0.0.65:5000/setStatus?postId=${props.id}&statusId=${status}`, requestOptions);
+        await fetch(`http://94.102.126.157:5000/setStatus?postId=${props.id}&statusId=${status}`, requestOptions);
         // try {
         //     const response = await fetch(`http://10.0.0.65:5000/setStatus?postId=${postId}&statusId=${status}`, requestOptions);
         //     const data:Post = await response.json();
@@ -44,7 +44,7 @@ const PostStatus = (props:propsInterface) => {
             })
         };
         try {
-            const response = await fetch(`http://10.0.0.65:5000/playlists`, requestOptions);
+            const response = await fetch(`http://94.102.126.157:5000/playlists`, requestOptions);
             const data:Playlist[] = await response.json();
             setPlaylists(data);
         } catch (error) {
@@ -80,7 +80,7 @@ const PostStatus = (props:propsInterface) => {
             })
         };
         try {
-            const response = await fetch(`http://10.0.0.65:5000/playlists`, requestOptions);
+            const response = await fetch(`http://94.102.126.157:5000/playlists`, requestOptions);
             const data:Playlist[] = await response.json();
         } catch (error) {
             console.log(error);
