@@ -12,7 +12,7 @@ const Header = () =>{
     const headerContent = user ?
         <div className="page-header__left-side">
             <Link to={'/profile'}>
-                <img className={'header__avatar'} src={'/image/avatar/rezume.jpg'}/>
+                <img className={'header__avatar'} src={user.personAvatar}/>
             </Link>
             <div className='page-header__exit-wrapper' onClick={logout}>
                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" width="533.333px" height="533.333px" viewBox="0 0 533.333 533.333">
