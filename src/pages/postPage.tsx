@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react'
-import {Link, useLocation, useNavigate } from "react-router-dom";
+import React, {useContext, useEffect, useState} from 'react'
+import { useLocation } from "react-router-dom";
 import Header from "../components/header";
 import '../components/css/post.css';
 import PostStatus from "../components/postStatus";
-interface Post{
+
+import {DomainContext} from "../index";
+import PostInfo from "../components/postInfo";
+import PostComments from "../components/postComments";
+ interface PostInterface{
     id: number,
     createdAt: string,
     title: string,
@@ -12,28 +16,59 @@ interface Post{
     imagePath: string,
     videoPath:string,
     episodeCount:number,
-    episodeDuration:string,
+    episodeDuration:number,
     userId: number,
     typeId: number,
     rating: number,
     genreId: number,
+    xxxPostContent: number
+}
+interface CommentInterface{
+    commentId: number,
+    createdAt: string,
+    text: string,
+    userId: number,
+    userLogin: string,
+}
+export interface responseInterface {
+    Post: PostInterface;
+    Comments: CommentInterface[];
 }
 
 const PostPage = () =>{
     const location = useLocation();
+    const domain = useContext(DomainContext);
     const postId = location.state;
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
-    const [post, setPost] = useState<Post>();
+    const [post, setPost] = useState<responseInterface>( {
+        Post:{
+            id: postId,
+            createdAt: '',
+            title: '',
+            description: '',
+            year: '',
+            imagePath: '',
+            videoPath:'',
+            episodeCount:0,
+            episodeDuration:0,
+            userId: 0,
+            typeId: 0,
+            rating: 0,
+            genreId: 0,
+            xxxPostContent: 0
+        },Comments:[]});
     const [isLoading, setIsLoading] = useState(false);
     const getPost = async () => {
+        console.log('Запрос запускается');
+
         setIsLoading(true);
         const requestOptions = {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         };
         try {
-            const response = await fetch(`http://94.102.126.157:5000/post/${postId}`, requestOptions);
-            const data:Post = await response.json();
+            const response = await fetch(`${domain}/post/${postId}`, requestOptions);
+            const data:responseInterface = await response.json();
             setPost(data);
         } catch (error) {
             console.log(error);
@@ -41,7 +76,6 @@ const PostPage = () =>{
             setIsLoading(false);
         }
     };
-
 
     useEffect(() => {
         getPost();
@@ -51,7 +85,9 @@ const PostPage = () =>{
             <Header/>
             <main className="post-page__container container">
                 <PostStatus id={postId} user={user} imagePath={user.imagePath}/>
-                <div className='right-side'></div>
+                <PostInfo postInfo={post}></PostInfo>
+                <p className={'post__description'}>{post.Post.description}</p>
+                <PostComments postInfo={post!}></PostComments>
             </main>
         </div>
     )

@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import "../css/form.css";
 import { useNavigate } from "react-router-dom";
+import {DomainContext} from "../../index";
 
 interface registrationFormState {
     title: string;
@@ -23,6 +24,7 @@ interface typeInterface {
     typeName: string
 }
 const RegistrationForm = () => {
+    const domain = useContext(DomainContext);
     const [state, setState] = useState<registrationFormState>({
         title: "",
         description: "",
@@ -113,7 +115,7 @@ const RegistrationForm = () => {
                 genreId: state.genreId,
             })
         }
-        await fetch('http://94.102.126.157:5000/addPost', requestOptions)
+        await fetch(`${domain}/addPost`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 if (data.success == 'true') {
@@ -130,7 +132,7 @@ const RegistrationForm = () => {
                 headers: { "Content-Type": "application/json" },
             };
             try {
-                const response = await fetch(`http://94.102.126.157:5000/filters`, requestOptions);
+                const response = await fetch(`${domain}/filters`, requestOptions);
                 const data = await response.json();
                 setGenre(data.genreList);
                 setTypes(data.typeList);

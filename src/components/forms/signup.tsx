@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import "../css/form.css";
 import { Link, useNavigate } from "react-router-dom";
+import {DomainContext} from "../../index";
 
 interface registrationFormState {
     login: string;
@@ -31,7 +32,7 @@ const RegistrationForm = () => {
         errorPhoto: [],
     });
     const navigate = useNavigate();
-
+    const domain = useContext(DomainContext);
     const loginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState((prevState) => ({ ...prevState, login: event.target.value }));
     };
@@ -100,7 +101,7 @@ const RegistrationForm = () => {
             })
         }
         console.log(requestOptions.body);
-        await fetch('http://94.102.126.157:5000/signup', requestOptions)
+        await fetch(`${domain}/signup`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 if (data.registrationError == '') {
@@ -121,7 +122,7 @@ const RegistrationForm = () => {
         const options = Array.from({ length: 94 }, (_, i) => <option key={i}>{i+7}</option>);
         return (
             <section>
-                <h1 className={"title"}>Регистрация</h1>
+                <h1 className={"form__title"}>Регистрация</h1>
                 <form className={'form'} onSubmit={handleSubmit}>
                     <div className={'inner__wrapper'}>
                         <div className={'input__wrapper'}>

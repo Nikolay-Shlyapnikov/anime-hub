@@ -1,11 +1,11 @@
 import React from 'react';
-import SignupForm from "../components/forms/signup";
+import PlaylistForm from "../components/forms/playlistForm";
 import Header from "../components/header";
 function SignupPage() {
     return (
         <div className="loginPage">
             <Header/>
-            <SignupForm></SignupForm>
+            <PlaylistForm/>
         </div>
     );
 }

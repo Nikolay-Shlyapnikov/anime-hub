@@ -4,15 +4,18 @@ import '../components/css/style.css'
 import '../components/css/null.css'
 import '../components/css/profile.css'
 import Playlist from "../components/playlist";
+import {Link, useLocation} from "react-router-dom";
 interface profilePageInterface {
     XXX: boolean;
 }
 function ProfilePage() {
-
-    const [XXX, setXXX] = useState<boolean>(false);
+    const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
+    const [XXX, setXXX] = useState<boolean>(userInfo.xxxContent);
     let countPlaylist = 5;
     let countReview = 10;
-    const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
+    const location = useLocation();
+    let playListCreate;
+    location.state ? playListCreate = location.state : playListCreate = false;
     const options ={
         method: 'GET',
         headers: { "Content-Type": "application/json" },
@@ -33,6 +36,12 @@ function ProfilePage() {
             <main className="profile__container container">
                 <div className='profile__name-wrapper'>
                     <h1 className='profile__name'>{userInfo.personLogin}, {userInfo.personAge}</h1>
+                    {
+                        userInfo.personRole == 4 && <Link className='profile__button profile__button--top' to={'/admin'}>Панель администратора</Link>
+                    }
+                    {
+                        userInfo.personRole == 4 || userInfo.personRole == 3 ? <Link className='profile__button profile__button--top' to={'/postForm'}>Создать новый пост</Link>: null
+                    }
                 </div>
                <div className='user__info-wrapper'>
                    <div className='profile__left-side'>
@@ -74,7 +83,11 @@ function ProfilePage() {
                    </div>
                    <div className='profile__right-side'>
                            {userInfo.personAge > 18 ? <div className='profile__checkbox-wrapper profile__text'><button className={`profile__checkbox ${XXX ? 'active': ''}`} onClick={changeXXX}></button> Отображать контент 18+?</div> : ''}
-                       <button className='profile__button'>Создать плейлист</button>
+                       <Link to={'/playlistForm'}className='profile__button'>Создать плейлист</Link>
+                       {
+                           playListCreate ? <p className={'profile__text green'}>Вы создали плейлист</p>: null
+                       }
+
                    </div>
                </div>
                 <div className='profile__main-content'>

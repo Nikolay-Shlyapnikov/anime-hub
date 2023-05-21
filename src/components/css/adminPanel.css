@@ -1,0 +1,43 @@
+.user__item{
+}
+.user__table{
+    width: 100%;
+    text-align: center;
+    border: 1px solid #fda022;
+    background: #fda022;
+    border-radius: 10px;
+    padding: 0 3px 3px 3px;
+    transition: all 0.4s ease-out;
+}
+.user__table tr{
+    border: none;
+    background: #FFFFFF;
+}
+.user__table thead{
+    color: #FFFFFF;
+}
+.user__table caption{
+    font-size: 25px;
+    font-weight: 600;
+    margin: 20px 0 20px 0;
+}
+.user__select{
+    width: auto;
+    margin: 5px;
+}
+
+.role__status.green{
+    color: #00a200;
+    font-size: 14px;
+    font-weight: 600;
+}
+.user__select-wrapper{
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    flex-direction: column;
+}
+.fade-out {
+    opacity: 0;
+    transition: opacity 4s ease-out; /* Adjust the duration and easing function as desired */
+}

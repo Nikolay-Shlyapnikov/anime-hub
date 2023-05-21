@@ -1,74 +1,26 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import "../css/form.css";
 import { useNavigate } from "react-router-dom";
+import {DomainContext} from "../../index";
 
-interface registrationFormState {
+interface playListFormState {
     title: string;
-    description: string;
-    year: string;
-    image: string | null;
-    fileName: string;
-    episodeCount: number | null;
-    episodeDuration: number | null;
-    typeId: number | null;
-    genreId: number | null;
-    isXXX: boolean;
+    isPrivate: number;
 }
-
-const RegistrationForm = () => {
-    const [state, setState] = useState<registrationFormState>({
+const PlayListForm = () => {
+    const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
+    const domain = useContext(DomainContext);
+    const [state, setState] = useState<playListFormState>({
         title: "",
-        description: "",
-        year: "",
-        image: null,
-        episodeCount: null,
-        episodeDuration: null,
-        fileName: "не выбран",
-        typeId: null,
-        genreId: null,
-        isXXX: false
+        isPrivate: 0
     });
     const navigate = useNavigate();
-    const loginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setState((prevState) => ({ ...prevState, login: event.target.value }));
+    const titleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setState((prevState) => ({ ...prevState, title: event.target.value }));
     };
-
-    const ageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const age = parseInt(event.target.value);
-        setState((prevState) => ({ ...prevState, age }));
-    };
-
-    const fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files![0];
-        const fileToBase64 = (file: File): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const base64 = reader.result?.toString();
-                    if (base64) {
-                        resolve(base64.split(",")[1]); // Remove data:image/png;base64, from base64 string
-                    } else {
-                        reject("Ошибка загрузки фото, попробуйте ещё раз");
-                    }
-                };
-            });
-        }
-        if (file) {
-            fileToBase64(file).then(
-                (fileInBase64) => {
-                    setState((prevState) => ({
-                        ...prevState,
-                        file: fileInBase64,
-                        fileName: file.name,
-                    }));
-                },
-                (error) => {
-                    setState((prevState) => ({ ...prevState, errorPhoto: error }));
-                }
-            );
-        }
-
+    const changePrivate = () => {
+        let privateValue = state.isPrivate == 1 ? 0 : 1;
+        setState((prevState) => ({ ...prevState, isPrivate: privateValue}));
     };
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -76,63 +28,39 @@ const RegistrationForm = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                title: "",
-                description: "",
-                year: "",
-                image: null,
-                episodeCount: null,
-                episodeDuration: null,
-                fileName: "не выбран",
-                typeId: null,
-                genreId: null,
-                isXXX: false
+                personId: userInfo.personId,
+                title: state.title,
+                isPrivate: state.isPrivate,
             })
         }
         console.log(requestOptions.body);
-        await fetch('http://94.102.126.157:5000/signup', requestOptions)
+        await fetch(`${domain}/addPlaylist`, requestOptions)
             .then(response => response.json())
-            .then(data => {
-                if (data.registrationError == '') {
-                    navigate('/login', { state: { registration: true } });
-                }
-                setState(prevState => {
-                    return {
-                        ...prevState,
-                        errorLogin: [data.loginError, data.registrationLoginError],
-                        errorPassword: data.passwordError,
-                        errorEmail: [data.mailError, data.registrationMailError],
-                    };
-                });
+            .then((data) => {
+               if(data.success === 'true') navigate('/profile', {state: {createPlaylist: true}});
             });
 
     }
 
-    const options = Array.from({ length: 94 }, (_, i) => <option key={i}>{i}</option>);
     return (
         <section>
-            <h1 className={"title"}>Создание нового поста</h1>
+            <h1 className={"form__title"}>Создание нового плейлиста</h1>
             <form className={'form'} onSubmit={handleSubmit}>
                 <div className={'inner__wrapper'}>
                     <div className={'input__wrapper'}>
                         <p className={'input__title'}>Введите название:</p>
-                        <input className={'input'} placeholder={'Ivanov'}  type="text" value={state.title} onInput={loginChange} />
+                        <input className={'input'} placeholder={'Название плейлиста'}  type="text" value={state.title} onInput={titleChange} />
                     </div>
                     <div className={'input__wrapper'}>
-                        <p className={'input__title'}>Выберите фото профиля:</p>
-                        <label className={'label__file button'}>
-                            Выбрать
-                            <input className={'input input__file'} accept="image/*" type="file" onInput={fileChange} />
-                        </label>
-                        <p className={'input__title'}>Имя файла: <span>{state.fileName}</span></p>
+                        <div className='profile__checkbox-wrapper profile__text'>
+                            <button type={'button'} className={`profile__checkbox ${state.isPrivate == 1 ? 'active': ''}`} onClick={changePrivate}></button>
+                            <p className={'input__title'}> Приватный плейлист?</p>
+                        </div>
                     </div>
-                    <div className={'input__wrapper'}>
-                        <p className={'input__title'}>Укажите возраст:</p>
-                        <select className={'select'} onChange={ageChange}>{options}</select>
-                    </div>
-                    <button className={'button'} type="submit" >Создать пост</button>
+                    <button className={'button'} type="submit" >Создать плейлист</button>
                 </div>
             </form>
         </section>
     );
 }
-export default RegistrationForm
+export default PlayListForm

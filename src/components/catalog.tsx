@@ -1,4 +1,5 @@
-import React,{ useState, useEffect } from 'react';
+import React,{ useState, useEffect, useContext } from 'react';
+import {DomainContext} from "../index";
 import './css/catalog.css'
 import CatalogItem from "./catalogItem";
 interface CatalogInterface {
@@ -23,7 +24,7 @@ interface Post {
     genreId: number,
 }
 const Catalog = (catalogProps: CatalogInterface) => {
-
+    const domain = useContext(DomainContext);
     let sortSetting: {text: string, number: number};
     catalogProps.sort === 'date' ? sortSetting = {text: 'дате', number: 1}:
         catalogProps.sort === 'title' ? sortSetting ={text: 'алфавиту', number: 3}:
@@ -49,7 +50,7 @@ const Catalog = (catalogProps: CatalogInterface) => {
             })
         };
         try {
-            const response = await fetch('http://94.102.126.157:5000/sortedPosts', requestOptions);
+            const response = await fetch(`${domain}/sortedPosts`, requestOptions);
             const data:Post[] = await response.json();
             setPosts(data);
         } catch (error) {
@@ -66,7 +67,7 @@ const Catalog = (catalogProps: CatalogInterface) => {
         catalogContent = <p className="catalog__title">Посты не найдены</p>;
     }
     if (posts.length > 0){
-        catalogContent = (posts as Post[]).map((post, index) => {
+        catalogContent = (posts as Post[]).map((post) => {
             return (
                 <CatalogItem
                     key={'post' + post.id}

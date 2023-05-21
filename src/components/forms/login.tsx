@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import '../css/form.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import * as domain from "domain";
+import {DomainContext} from "../../index";
 export interface userInfoInterface {
     createdData: string
     personAge: number
@@ -15,6 +17,7 @@ const LoginForm = () => {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errorAuth, setErrorAuth] = useState<string>('');
+    const domain = useContext(DomainContext);
     const location = useLocation();
     const navigate = useNavigate();
     let registration;
@@ -40,7 +43,7 @@ const LoginForm = () => {
                 password: password,
             })
         };
-        fetch('http://94.102.126.157:5000/login', requestOptions)
+        fetch(`${domain}/login`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 data.authError ? setErrorAuth(data.authError) : setUser(data);
@@ -50,9 +53,9 @@ const LoginForm = () => {
     return (
         <section>
             {
-                registration ? <h2 className={'title green'}> Вы успешно зарегистрировались</h2>: null
+                registration ? <h2 className={'form__title green'}> Вы успешно зарегистрировались</h2>: null
             }
-            <h1 className={"title"}>Вход</h1>
+            <h1 className={"form__title"}>Вход</h1>
             <form className={'form'} onSubmit={handleSubmit}>
                 <div className={'inner__wrapper'}>
                     <div className={'input__wrapper'}>
