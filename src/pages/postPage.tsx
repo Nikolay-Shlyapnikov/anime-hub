@@ -29,6 +29,7 @@ interface CommentInterface{
     text: string,
     userId: number,
     userLogin: string,
+    imagePath:string
 }
 export interface responseInterface {
     Post: PostInterface;
@@ -84,7 +85,7 @@ const PostPage = () =>{
         <div>
             <Header/>
             <main className="post-page__container container">
-                <PostStatus id={postId} user={user} imagePath={user.imagePath}/>
+                <PostStatus id={postId} user={user} imagePath={post.Post.imagePath}/>
                 <PostInfo postInfo={post}></PostInfo>
                 <p className={'post__description'}>{post.Post.description}</p>
                 <PostComments postInfo={post!}></PostComments>
