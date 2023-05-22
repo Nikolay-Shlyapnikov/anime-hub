@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(
 export const DomainContext = React.createContext('');
 
 root.render(
-    <DomainContext.Provider value="http://10.0.0.65:5000">
+    <DomainContext.Provider value="http://94.102.126.157:5000">
         <Router>
             <Routes>
                 <Route key={"route1"} path="/" element={<MainPage/>} />

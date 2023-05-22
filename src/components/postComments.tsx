@@ -18,7 +18,7 @@ const PostComments = (props:propsInterface) => {
         return(
             <div key={comment.commentId} className="comment__item">
                 <div className="comment__info">
-                    <img className="comment__author-image" src="" alt="Аватар автора"/>
+                    <img className="comment__author-image" src={comment.imagePath} alt="Аватар автора"/>
                         <Link to={`/profile/${comment.userId}`} className="comment__author-name">{comment.userLogin}</Link>
                         <span className="comment__date">{comment.createdAt}</span>
                         {/*<span>{comment.rating}</span>*/}
