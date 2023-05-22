@@ -1,43 +1,31 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {userInfoInterface} from "./forms/login";
-import * as domain from "domain";
 import '../components/css/post.css';
 import {DomainContext} from "../index";
+import LikeForm from "./forms/likeForm";
 export interface PlaylistInterface {
-    id:number
+    playlistId:number
     createdAt: string
     title: string
+
 }
 
 interface propsInterface {
     id:number
     user: userInfoInterface
     imagePath: string
+    onChangeRating: React.ChangeEventHandler<HTMLSelectElement>
 }
 const PostStatus = (props:propsInterface) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [playlists, setPlaylists] = useState<PlaylistInterface[]>();
-    const [playlistContent, setPlaylistContent] = useState<JSX.Element[] | JSX.Element | null>(null);
+    const [allPlaylists, setAllPlaylists] = useState<PlaylistInterface[]>();
+    const [postPlaylists, setPostPlaylists] = useState<PlaylistInterface[]>();
+    const [addPlaylistContent, setAddPlaylistContent] = useState<JSX.Element[] | JSX.Element | null>(null);
+    const [deletePlaylistContent, setDeletePlaylistContent] = useState<JSX.Element[] | JSX.Element | null>(null);
+    const [changePlaylist, setChangePlaylist] = useState(false);
+
     const domain = useContext(DomainContext);
-    const selectStatus = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const status = parseInt(event.target.value);
-        setIsLoading(true);
-        const requestOptions = {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        };
-        await fetch(`${domain}/setStatus?postId=${props.id}&statusId=${status}`, requestOptions);
-        // try {
-        //     const response = await fetch(`http://10.0.0.65:5000/setStatus?postId=${postId}&statusId=${status}`, requestOptions);
-        //     const data:Post = await response.json();
-        //     setStatus(data);
-        // } catch (error) {
-        //     console.log(error);
-        // } finally {
-        //     setIsLoading(false);
-        // }
-    }
-    const showPlaylists = async ()=>{
+    const getAllPlaylists = async ()=>{
         setIsLoading(true);
         const requestOptions = {
             method: "POST",
@@ -49,73 +37,119 @@ const PostStatus = (props:propsInterface) => {
         try {
             const response = await fetch(`${domain}/playlists`, requestOptions);
             const data:PlaylistInterface[] = await response.json();
-            setPlaylists(data);
+            setAllPlaylists(data);
         } catch (error) {
             console.log(error);
         } finally {
             setIsLoading(false);
         }
     }
-    useEffect(()=>{
-        if((playlists ?? []).length === 0){
-            setPlaylistContent(<p className='playlist__item'>У вас ещё нет плейлистов</p>);
-        }
-        if((playlists ?? []).length > 0){
-            const content = (playlists as PlaylistInterface[]).map((playlist, index) => {
-                return (
-                    <p onClick={addPostToPlaylist} data-id={playlist.id} className='playlist__item' key={'playlist'+index}>
-                        <span>{playlist.title}</span>
-                        <button type={'button'} className={`profile__checkbox active`}></button>
-                        {/*<p className={'input__title'}> Приватный плейлист?</p>*/}
-                    </p>
-                )
-            });
-            setPlaylistContent(content);
-        }
-        if(playlists == null){
-            setPlaylistContent(<p></p>);
-        }
-    }, [playlists]);
-    useEffect(()=>{
-        showPlaylists();
-    }, [])
-    const addPostToPlaylist = async (event: React.MouseEvent<HTMLParagraphElement>) => {
+    const getPostPLaylists = async  () =>{
+        setIsLoading(true);
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                postId: props.id,
-                playlistId: event.currentTarget.dataset.id,
+                personId: props.user.personId,
+                postId: props.id
             })
         };
         try {
-            const response = await fetch(`${domain}/playlists`, requestOptions);
+            const response = await fetch(`${domain}/postsPlaylists`, requestOptions);
             const data:PlaylistInterface[] = await response.json();
+            setPostPlaylists(data);
         } catch (error) {
             console.log(error);
         } finally {
             setIsLoading(false);
         }
     }
+    const addPostToPlaylist = async (e: React.MouseEvent<HTMLElement>) =>{
+        setIsLoading(true);
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                playlistId: e.currentTarget.dataset.value,
+                postId: props.id
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/addPlaylistItem`, requestOptions);
+            const data = await response.json();
+            if (data.success == 'true'){
+                setChangePlaylist(!changePlaylist);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    const deletePostFromPlaylist = async (e: React.MouseEvent<HTMLElement>) =>{
+        setIsLoading(true);
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                playlistId: e.currentTarget.dataset.value,
+                postId: props.id
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/dropPlaylistItem`, requestOptions);
+            const data = await response.json();
+            if (data.success == 'true'){
+                setChangePlaylist(!changePlaylist);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    const renderPlaylists = () =>{
+        const subtractedArray: PlaylistInterface[] = allPlaylists
+            ? allPlaylists.filter(
+                (playlist) =>
+                    !postPlaylists?.some((postPlaylist) => playlist.playlistId === postPlaylist.playlistId)
+            )
+            : [];
+        const addContent = allPlaylists ? subtractedArray!.map((playlist)=>{
+            return <p className={'playlist__item'} onClick={addPostToPlaylist} data-value={playlist.playlistId}>{playlist.title}</p>
+        }) : [];
+        setAddPlaylistContent(addContent);
+        const deleteContent = postPlaylists ? postPlaylists!.map((playlist)=>{
+            return <p className={'playlist__item'} onClick={deletePostFromPlaylist} data-value={playlist.playlistId}>{playlist.title}</p>
+        }): []
+        setDeletePlaylistContent(deleteContent);
+    }
+    useEffect(()=>{
+        renderPlaylists();
+    }, [postPlaylists, allPlaylists]);
+    useEffect(()=>{
+        getPostPLaylists();
+        getAllPlaylists();
+    }, [changePlaylist])
+
 
     return (
         <div className={'sidebar'}>
             <div className="post__left-side">
                 <img className='post__image' alt='Фото аниму' src={props.imagePath}/>
-                <div className='status__wrapper'>
-                    <p className='status__title'>Статус:</p>
-                    <select className='status__select select' onSelect={selectStatus}>
-                        <option className='status__option' value='1'>Планирую посмотреть</option>
-                        <option className='status__option' value='2'>Смотрю</option>
-                        <option className='status__option' value='3'>Просмотрено</option>
-                    </select>
-                </div>
-                <div className='post__playlists'>
+                { addPlaylistContent ? <div className='post__playlists'>
                     <p className='playlist__title'>Добавить в плейлист</p>
-                    <div className={playlistContent ? 'playlist__wrapper active' : 'playlist__wrapper'}>
-                        {playlistContent}
+                    <div className={'playlist__wrapper'}>
+                        {addPlaylistContent}
                     </div>
-                </div>
+                </div> : null}
+                { deletePlaylistContent ? <div className='post__playlists'>
+                    <p className='playlist__title'>Удалить из плейлиста</p>
+                    <div className={'playlist__wrapper'}>
+                        {deletePlaylistContent}
+                    </div>
+                </div> : null}
+                <LikeForm onChangeRating={props.onChangeRating} id={props.id}></LikeForm>
             </div>
         </div>
     )

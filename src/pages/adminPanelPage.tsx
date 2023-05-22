@@ -77,7 +77,6 @@ function MainPage() {
             <UserItem user={user} roles={state.roles}/>
         )
     });
-    console.log(state.users);
     return (
         <div>
             <Header/>

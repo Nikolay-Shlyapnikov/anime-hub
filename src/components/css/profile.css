@@ -57,6 +57,7 @@
      margin: 5px;
      position: relative;
  }
+
 .profile__checkbox-wrapper{
     display: flex;
     align-items: center;
@@ -110,7 +111,6 @@
     background: #fda022;
     color: #FFF;
 }
-
 .profile__main-content{
     display: grid;
     grid-template-columns: repeat(2,1fr);

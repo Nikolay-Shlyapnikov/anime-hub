@@ -81,6 +81,9 @@
     width: 100%;
     color:black;
 }
+.green{
+    color:green;
+}
 .input__title.lower__link{
     text-align: center;
 }

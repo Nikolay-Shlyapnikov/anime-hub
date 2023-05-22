@@ -40,8 +40,7 @@
     font-weight: 600;
 }
 .playlist__wrapper.active{
-    height: auto;
-    transition: height 0.3s ease;
+
 }
 .post__description{
     font-size: 20px;
@@ -62,7 +61,7 @@
     width: 100%;
 }
 .playlist__wrapper{
-    height: 0;
+
     border: 1px solid #fda022;
     display: inline-flex;
     flex-direction: column;
@@ -72,7 +71,7 @@
 .playlist__item{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     text-align: center;
 }
 .playlist__item span{
@@ -126,10 +125,21 @@
     overflow-x: auto;
     font-size: 20px;
 }
+.post__comments-form, .post__like-form{
+   display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
 .post__comments-form{
-    display: grid;
-    grid-template-columns: 30% 1fr;
-    gap: 20px;
+    margin: 40px 0 0 0;
+}
+.post__comments-form .button, .post__like-form button{
+    width: auto;
+    margin: 0;
+}
+.select__wrapper{
+    margin: 30px 0 auto 0;
 }
 .post__comments-form .button{
     grid-column: 1/3;

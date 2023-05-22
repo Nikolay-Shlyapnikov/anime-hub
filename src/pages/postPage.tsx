@@ -7,7 +7,7 @@ import PostStatus from "../components/postStatus";
 import {DomainContext} from "../index";
 import PostInfo from "../components/postInfo";
 import PostComments from "../components/postComments";
- interface PostInterface{
+export interface PostInterface{
     id: number,
     createdAt: string,
     title: string,
@@ -19,9 +19,12 @@ import PostComments from "../components/postComments";
     episodeDuration:number,
     userId: number,
     typeId: number,
+    typeName: string,
+    genreName: string,
     rating: number,
     genreId: number,
-    xxxPostContent: number
+    xxxPostContent: number,
+    countLike: number
 }
 interface CommentInterface{
     commentId: number,
@@ -49,6 +52,8 @@ const PostPage = () =>{
             description: '',
             year: '',
             imagePath: '',
+            typeName: '',
+            genreName: '',
             videoPath:'',
             episodeCount:0,
             episodeDuration:0,
@@ -56,12 +61,13 @@ const PostPage = () =>{
             typeId: 0,
             rating: 0,
             genreId: 0,
-            xxxPostContent: 0
+            xxxPostContent: 0,
+            countLike: 0
         },Comments:[]});
     const [isLoading, setIsLoading] = useState(false);
-    const getPost = async () => {
-        console.log('Запрос запускается');
+    const [comment, setComment] = useState('');
 
+    const getPost = async () => {
         setIsLoading(true);
         const requestOptions = {
             method: "GET",
@@ -77,18 +83,73 @@ const PostPage = () =>{
             setIsLoading(false);
         }
     };
+    const ratingChange =  async (event: React.ChangeEvent<HTMLSelectElement>) =>{
+
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    personId: user.personId,
+                    postId: postId,
+                    rating: parseInt(event.target.value)
+                })
+            };
+            try {
+                const response = await fetch(`${domain}/setRating`, requestOptions);
+                const data = await response.json();
+                if(data.success == 'true'){
+                    getPost();
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+    }
+
+    const textChange =(event: React.ChangeEvent<HTMLTextAreaElement>)=>{
+        setComment(event.target.value);
+    }
+
+    const submitComment = async (e:React.FormEvent) =>{
+        e.preventDefault();
+        setIsLoading(true);
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: user.personId,
+                text: comment,
+                postId: postId
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/commentAdd`, requestOptions);
+            const data = await response.json();
+            if(data.success == 'true'){
+                getPost();
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     useEffect(() => {
         getPost();
     }, []);
+
+
+
     return (
         <div>
             <Header/>
             <main className="post-page__container container">
-                <PostStatus id={postId} user={user} imagePath={post.Post.imagePath}/>
+                <PostStatus onChangeRating={ratingChange} id={postId} user={user} imagePath={post.Post.imagePath}/>
                 <PostInfo postInfo={post}></PostInfo>
                 <p className={'post__description'}>{post.Post.description}</p>
-                <PostComments postInfo={post!}></PostComments>
+                <PostComments  submit={submitComment} textChange={textChange} postInfo={post!}></PostComments>
             </main>
         </div>
     )
