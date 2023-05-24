@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react'
-import { useLocation } from "react-router-dom";
+import React, {useContext, useEffect, useState, } from 'react'
+import { useLocation , useNavigate} from "react-router-dom";
 import Header from "../components/header";
 import '../components/css/post.css';
 import PostStatus from "../components/postStatus";
@@ -42,6 +42,7 @@ export interface responseInterface {
 const PostPage = () =>{
     const location = useLocation();
     const domain = useContext(DomainContext);
+    const navigate = useNavigate();
     const postId = location.state;
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
     const [post, setPost] = useState<responseInterface>( {
@@ -84,26 +85,30 @@ const PostPage = () =>{
         }
     };
     const ratingChange =  async (event: React.ChangeEvent<HTMLSelectElement>) =>{
-
-            const requestOptions = {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    personId: user.personId,
-                    postId: postId,
-                    rating: parseInt(event.target.value)
-                })
-            };
-            try {
-                const response = await fetch(`${domain}/setRating`, requestOptions);
-                const data = await response.json();
-                if(data.success == 'true'){
-                    getPost();
+            if(user == null){
+                navigate('/login');
+            }
+            else{
+                const requestOptions = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        personId: user.personId,
+                        postId: postId,
+                        rating: parseInt(event.target.value)
+                    })
+                };
+                try {
+                    const response = await fetch(`${domain}/setRating`, requestOptions);
+                    const data = await response.json();
+                    if(data.success == 'true'){
+                        getPost();
+                    }
+                } catch (error) {
+                    console.log(error);
+                } finally {
+                    setIsLoading(false);
                 }
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
             }
     }
 
@@ -113,34 +118,36 @@ const PostPage = () =>{
 
     const submitComment = async (e:React.FormEvent) =>{
         e.preventDefault();
-        setIsLoading(true);
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                userId: user.personId,
-                text: comment,
-                postId: postId
-            })
-        };
-        try {
-            const response = await fetch(`${domain}/commentAdd`, requestOptions);
-            const data = await response.json();
-            if(data.success == 'true'){
-                getPost();
+        if(user == null){
+            navigate('/login');
+        }
+        else{
+            setIsLoading(true);
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user.personId,
+                    text: comment,
+                    postId: postId
+                })
+            };
+            try {
+                const response = await fetch(`${domain}/commentAdd`, requestOptions);
+                const data = await response.json();
+                if(data.success == 'true'){
+                    getPost();
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoading(false);
         }
     }
-
     useEffect(() => {
         getPost();
     }, []);
-
-
 
     return (
         <div>
