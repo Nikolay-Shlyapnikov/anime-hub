@@ -8,7 +8,7 @@ interface propsInterface {
 
 const LikeForm = (props:propsInterface) => {
     const [isLoading, setIsLoading] = useState(false);
-    const userId = JSON.parse(localStorage.getItem('user')!).personId
+    const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).personId : null;
     const domain = useContext(DomainContext);
 
     let options = Array.from({ length: 11 }, (_, i) => <option key={i} value={i}>{i}</option>);

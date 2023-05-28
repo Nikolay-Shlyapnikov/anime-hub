@@ -7,9 +7,6 @@ interface propsInterface {
 }
 const PostInfo = (props:propsInterface) => {
     const post= props.postInfo.Post;
-    useEffect(()=>{
-
-    }, [])
     return (
         <div className="post__middle-side">
             <p className={'post__rating post-info__text'}><span>{post.rating}</span>/10</p>
@@ -21,7 +18,6 @@ const PostInfo = (props:propsInterface) => {
             <p className={'post__episode-duration post-info__text number'}><span>Длина эпизода:</span> {post.episodeDuration}</p>
             <p className={'post__year post-info__text number'}><span>Год:</span> {post.year}</p>
             <p className={'post__forbidden post-info__text number'}><span>Возрастные ограничения:</span> {post.xxxPostContent ? '18+': 'Отсутствуют'}</p>
-
         </div>
     )
 }
