@@ -1,9 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React from 'react'
 import '../components/css/post.css';
-import {DomainContext} from "../index";
 import {responseInterface} from "../pages/postPage";
 import CommentsForm from "./forms/comment";
-import LikeForm from "./forms/likeForm";
 import {Link} from "react-router-dom";
 
 interface propsInterface {
@@ -12,7 +10,6 @@ interface propsInterface {
     textChange: React.ChangeEventHandler<HTMLTextAreaElement>
 }
 const PostComments = (props:propsInterface) => {
-    const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
     const post= props.postInfo.Post;
     const comments = props.postInfo.Comments
     const commentsContent = comments.map((comment)=>{

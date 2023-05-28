@@ -3,7 +3,6 @@ import './css/playlist.css'
 import {PlaylistInterface} from "./postStatus";
 import {PostInterface} from "../pages/postPage";
 import {DomainContext} from "../index";
-import {render} from "@testing-library/react";
 import {useNavigate} from "react-router-dom";
 interface playlistInterface{
     userId: number;
@@ -69,7 +68,28 @@ const Playlist = (props:playlistInterface) =>{
             }
         }
     }
-
+    const deletePlaylist = async (event:React.MouseEvent<HTMLElement>) =>{
+        setIsLoading(true);
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                personId: props.userId,
+                playlistId: event.currentTarget.dataset.id
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/dropPlaylist`, requestOptions);
+            const data = await response.json();
+            if(data.success == 'true'){
+                showPlaylists();
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
     useEffect(()=>{
         if((playlists ?? []).length === 0){
             setPlaylistContent(<p className='playlist__item'>У вас ещё нет плейлистов</p>);
@@ -78,14 +98,17 @@ const Playlist = (props:playlistInterface) =>{
             const content = (playlists as PlaylistInterface[]).map((playlist, index) => {
                 return (
                     <div>
-                        <div onClick={getPlaylistItems} data-id={playlist.playlistId} className='profile__playlist-item' key={'playlist'+index}>
-                            <p className={'playlist__name'}>{playlist.title}</p>
+                        <div className='profile__playlist-item' key={'playlist'+index}>
+                            <p onClick={getPlaylistItems} data-id={playlist.playlistId} className={'playlist__name'}>{playlist.title}
+                                <div onClick={deletePlaylist} data-id={playlist.playlistId} className={'playlist__button cross'} ></div>
+                            </p>
                             {
                                 postContent!= null && playlist.playlistId === activePlaylistId ?
                                 <ul className={'post__list'}>
                                     {postContent}
                                 </ul>
                             : null}
+
                         </div>
                     </div>
                 )
@@ -95,7 +118,8 @@ const Playlist = (props:playlistInterface) =>{
     }, [playlists, activePlaylistId, postContent]);
     useEffect(()=>{
         showPlaylists();
-    }, [])
+    }, []);
+
     return(
         <div className=''>
             <p className='playlists__title'>Ваши плейлисты</p>

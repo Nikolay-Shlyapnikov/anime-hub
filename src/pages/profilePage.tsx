@@ -3,6 +3,7 @@ import Header from "../components/header";
 import '../components/css/style.css'
 import '../components/css/null.css'
 import '../components/css/profile.css'
+import Comments from "../components/comments";
 import Playlist from "../components/playlist";
 import {Link, useLocation} from "react-router-dom";
 interface profilePageInterface {
@@ -16,19 +17,7 @@ function ProfilePage() {
     const location = useLocation();
     let playListCreate;
     location.state ? playListCreate = location.state : playListCreate = false;
-    const options ={
-        method: 'GET',
-        headers: { "Content-Type": "application/json" },
-        body:JSON.stringify({
-            userId: userInfo.personId
-        })
-    }
-    // fetch('url', options)
-    //     .then(response => response.json())
-    //     .then(data =>{
-    //         countPlaylist = data.playList;
-    //         countReview = data.review;
-    //     });
+
     const changeXXX = () => setXXX(!XXX);
     return (
         <div>
@@ -92,6 +81,7 @@ function ProfilePage() {
                </div>
                 <div className='profile__main-content'>
                     <Playlist userId={userInfo.personId}></Playlist>
+                    <Comments userId={userInfo.personId}></Comments>
                 </div>
             </main>
         </div>

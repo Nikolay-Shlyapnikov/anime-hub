@@ -29,6 +29,9 @@
     font-size: 22px;
     text-align: center;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .profile__post-item-title{
     font-size: 18px;
@@ -39,4 +42,25 @@
     font-size: 20px;
     margin: 0 0 0 10px;
     font-weight: 600;
+}
+.playlist__button.cross{
+    width: 25px;
+    height: 25px;
+    border: 1px solid #FFF;
+    position: relative;
+}
+.playlist__button.cross:after, .playlist__button.cross:before{
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 2px;
+    background: #FFFFFF;
+    left: 50%;
+    top:50%;
+}
+.playlist__button.cross:after{
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+.playlist__button.cross:before{
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
