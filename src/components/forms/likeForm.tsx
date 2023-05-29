@@ -1,17 +1,22 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React from 'react'
 import '../css/post.css';
-import {DomainContext} from "../../index";
 interface propsInterface {
     id: number,
     onChangeRating: React.ChangeEventHandler<HTMLSelectElement>
+    rating: number | null
 }
 
 const LikeForm = (props:propsInterface) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).personId : null;
-    const domain = useContext(DomainContext);
+    let options = Array.from({ length: 11 }, (_, i) => {
 
-    let options = Array.from({ length: 11 }, (_, i) => <option key={i} value={i}>{i}</option>);
+        return (
+            <option
+                selected={props.rating ? props.rating === i  : false}
+                key={i}
+                value={i}>{i}
+            </option>
+        )
+    });
     return (
             <div className={'select__wrapper'}>
                 <p className={'select__title'}>Укажите рейтинг: </p>

@@ -11,6 +11,7 @@ import PostPage from "./pages/postPage";
 import PostFormPage from "./pages/addProfilePage";
 import PlayListFormPage from "./pages/playListFormPage";
 import AdminPanelPage from "./pages/adminPanelPage";
+import UpdatePostPage from "./pages/updatePostPage";
 
 
 const root = ReactDOM.createRoot(
@@ -30,6 +31,7 @@ root.render(
                 <Route key={"route6"} path="/postForm" element={<PostFormPage />} />
                 <Route key={"route7"} path="/playlistForm" element={<PlayListFormPage />} />
                 <Route key={"route8"} path="/admin" element={<AdminPanelPage />} />
+                <Route key={"route9"} path="/updatePost" element={<UpdatePostPage />} />
             </Routes>
         </Router>
     </DomainContext.Provider>

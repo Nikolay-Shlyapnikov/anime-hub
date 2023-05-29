@@ -38,7 +38,9 @@ export interface responseInterface {
     Post: PostInterface;
     Comments: CommentInterface[];
 }
-
+interface ratingInterface {
+    rating: number | null
+}
 const PostPage = () =>{
     const location = useLocation();
     const domain = useContext(DomainContext);
@@ -67,10 +69,10 @@ const PostPage = () =>{
         },Comments:[]});
     const [isLoading, setIsLoading] = useState(false);
     const [comment, setComment] = useState('');
-
+    const [rating, setRating] = useState<number | null>(null);
     const getPost = async () => {
         setIsLoading(true);
-        const requestOptions = {
+        let requestOptions = {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         };
@@ -83,31 +85,75 @@ const PostPage = () =>{
         } finally {
             setIsLoading(false);
         }
+        const ratingRequestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                personId: user.personId,
+                postId: postId,
+            })
+        }
+        try {
+            const response = await fetch(`${domain}/getPostPersonRating`, ratingRequestOptions);
+            const data:ratingInterface = await response.json();
+            if(data.rating){
+                setRating(data.rating);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+
     };
     const ratingChange =  async (event: React.ChangeEvent<HTMLSelectElement>) =>{
             if(user == null){
                 navigate('/login');
             }
             else{
-                const requestOptions = {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        personId: user.personId,
-                        postId: postId,
-                        rating: parseInt(event.target.value)
-                    })
-                };
-                try {
-                    const response = await fetch(`${domain}/setRating`, requestOptions);
-                    const data = await response.json();
-                    if(data.success == 'true'){
-                        getPost();
+                if(rating){
+                    const requestOptions = {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            personId: user.personId,
+                            postId: postId,
+                            rating: parseInt(event.target.value)
+                        })
+                    };
+                    try {
+                        const response = await fetch(`${domain}/updatePersonPostRating`, requestOptions);
+                        const data = await response.json();
+                        if(data.success == 'true'){
+                            getPost();
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    } finally {
+                        setIsLoading(false);
                     }
-                } catch (error) {
-                    console.log(error);
-                } finally {
-                    setIsLoading(false);
+                }
+                else{
+                    const requestOptions = {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            personId: user.personId,
+                            postId: postId,
+                            rating: parseInt(event.target.value)
+                        })
+                    };
+                    try {
+                        const response = await fetch(`${domain}/setRating`, requestOptions);
+                        const data = await response.json();
+                        if(data.success == 'true'){
+                            getPost();
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    } finally {
+                        setIsLoading(false);
+                    }
                 }
             }
     }
@@ -115,7 +161,9 @@ const PostPage = () =>{
     const textChange =(event: React.ChangeEvent<HTMLTextAreaElement>)=>{
         setComment(event.target.value);
     }
-
+    const updatePost = () =>{
+        navigate('/updatePost', {state: {post: post.Post}});
+    }
     const submitComment = async (e:React.FormEvent) =>{
         e.preventDefault();
         if(user == null){
@@ -148,14 +196,38 @@ const PostPage = () =>{
     useEffect(() => {
         getPost();
     }, []);
-
+    const deletePost = async () =>{
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                postId: postId,
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/deletePost`, requestOptions);
+            const data = await response.json();
+            if(data.success == 'true'){
+                navigate('/');
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    const buttonsContent = user.personRole == 3 ?  <div className={'post__button-wrapper'}>
+        <button onClick={updatePost} className={'button'}>Отредактировать</button>
+        <button onClick={deletePost} className={'button'}>Удалить пост</button>
+    </div> : null;
     return (
         <div>
             <Header/>
             <main className="post-page__container container">
-                <PostStatus onChangeRating={ratingChange} id={postId} user={user} imagePath={post.Post.imagePath}/>
+                <PostStatus rating={rating} onChangeRating={ratingChange} id={postId} user={user} imagePath={post.Post.imagePath}/>
                 <PostInfo postInfo={post}></PostInfo>
                 <p className={'post__description'}>{post.Post.description}</p>
+                {buttonsContent}
                 <PostComments  submit={submitComment} textChange={textChange} postInfo={post!}></PostComments>
             </main>
         </div>

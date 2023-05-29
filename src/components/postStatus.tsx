@@ -15,6 +15,7 @@ interface propsInterface {
     user: userInfoInterface
     imagePath: string
     onChangeRating: React.ChangeEventHandler<HTMLSelectElement>
+    rating: null | number
 }
 const PostStatus = (props:propsInterface) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -116,11 +117,11 @@ const PostStatus = (props:propsInterface) => {
             )
             : [];
         const addContent = allPlaylists ? subtractedArray!.map((playlist)=>{
-            return <p className={'playlist__item'} onClick={addPostToPlaylist} data-value={playlist.playlistId}>{playlist.title}</p>
+            return <p className={'playlist__item'} key={playlist.playlistId}  onClick={addPostToPlaylist} data-value={playlist.playlistId}>{playlist.title}</p>
         }) : [];
         setAddPlaylistContent(addContent);
         const deleteContent = postPlaylists ? postPlaylists!.map((playlist)=>{
-            return <p className={'playlist__item'} onClick={deletePostFromPlaylist} data-value={playlist.playlistId}>{playlist.title}</p>
+            return <p className={'playlist__item'} key={playlist.playlistId} onClick={deletePostFromPlaylist} data-value={playlist.playlistId}>{playlist.title}</p>
         }): []
         setDeletePlaylistContent(deleteContent);
     }
@@ -149,7 +150,7 @@ const PostStatus = (props:propsInterface) => {
                         {deletePlaylistContent}
                     </div>
                 </div> : null}
-                <LikeForm onChangeRating={props.onChangeRating} id={props.id}></LikeForm>
+                <LikeForm rating={props.rating} onChangeRating={props.onChangeRating} id={props.id}></LikeForm>
             </div>
         </div>
     )

@@ -205,3 +205,15 @@ textarea:focus {
     border: 1px solid #fda022;
     box-shadow: 0 0 0 0.2rem rgba(253, 160, 34, 0.30);
 }
+.post-info__wrapper{
+    display: flex;
+}
+.post__button-wrapper{
+    padding: 15px 0 0 0;
+    display: flex;
+    width: 100%;
+}
+.post__button-wrapper .button{
+    height: 40px;
+    margin:  0 auto 0 0 ;
+}
