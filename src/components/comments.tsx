@@ -1,16 +1,26 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState} from 'react';
 import './css/comments.css'
 import {DomainContext} from "../index";
 import {useNavigate} from "react-router-dom";
-import {PlaylistInterface} from "./postStatus";
 interface commentstInterface{
     userId: number;
+    setReviewCount:Function;
 }
-
+interface comment{
+    commentId: number
+    createdAt: string
+    imagePath: string
+    postId: number
+    text: string
+    userId: number
+    userLogin: number
+    title: string
+}
 const Comments = (props:commentstInterface) =>{
     const domain = useContext(DomainContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [comments, setComments] = useState();
+    const [comments, setComments] = useState<comment[] | string>('У вас нет комментариев');
+    const [commentsContent, setCommentsContent] = useState<React.JSX.Element[] | React.JSX.Element>([]);;
     const navigate = useNavigate();
 
     const linkToPost = (e: React.MouseEvent<HTMLElement>) =>{
@@ -30,20 +40,42 @@ const Comments = (props:commentstInterface) =>{
             const data = await response.json();
             console.log(data);
             setComments(data);
+            props.setReviewCount(data.length);
         } catch (error) {
             console.log(error);
         } finally {
             setIsLoading(false);
         }
     }
+    const getCommentContent = () =>{
+        let commentContents: JSX.Element[] = [];
+
+        if (typeof comments === 'string') {
+            commentContents = [<div key={0} className="profile__comment-item">{comments}</div>];
+        } else if (Array.isArray(comments)) {
+            commentContents = (comments as comment[]).map((comment, index) => (
+                <div key={index} className="profile__comment-item">
+                    <div className={'profile__comment-text'}>Текст комментария: {comment.text}</div>
+                    <div className="profile__comment-post">К посту: <span data-id={comment.postId} onClick={linkToPost} className={'profile__comment-post-title'}>{comment.title}</span>
+                    </div>
+                </div>
+            ));
+        }
+        setCommentsContent(commentContents);
+    }
+    useEffect(()=>{
+        getCommentContent();
+    }, [setComments, comments]);
     useEffect(()=>{
         getComments();
-    }, [])
+    }, []);
     return(
         <div className=''>
             <p className='playlists__title'>Ваши комментарии</p>
-            <div className={'comments'}>
+            <div className={'profile__comments'}>
+                {commentsContent}
             </div>
+
         </div>
     )
 }

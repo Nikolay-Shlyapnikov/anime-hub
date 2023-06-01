@@ -6,6 +6,7 @@ import {DomainContext} from "../index";
 import {useNavigate} from "react-router-dom";
 interface playlistInterface{
     userId: number;
+    setPlaylistCount:Function;
 }
 
 const Playlist = (props:playlistInterface) =>{
@@ -29,6 +30,7 @@ const Playlist = (props:playlistInterface) =>{
             const response = await fetch(`${domain}/playlists`, requestOptions);
             const data:PlaylistInterface[] = await response.json();
             setPlaylists(data);
+            props.setPlaylistCount(data.length);
         } catch (error) {
             console.log(error);
         } finally {

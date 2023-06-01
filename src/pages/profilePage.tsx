@@ -12,12 +12,19 @@ interface profilePageInterface {
 function ProfilePage() {
     const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
     const [XXX, setXXX] = useState<boolean>(userInfo.xxxContent);
-    let countPlaylist = 5;
-    let countReview = 10;
+    const [countPlaylist, setCountPlaylist] = useState(0);
+    const [countReview, setCountReview] = useState(0);
+    // let countPlaylist = 5;
+    // let countReview = 10;
     const location = useLocation();
     let playListCreate;
     location.state ? playListCreate = location.state : playListCreate = false;
-
+    const changeReviewCount = (value:number) => {
+        setCountReview(value);
+    };
+    const changePlaylistCount = (value:number) => {
+        setCountPlaylist(value);
+    };
     const changeXXX = () => setXXX(!XXX);
     return (
         <div>
@@ -80,8 +87,8 @@ function ProfilePage() {
                    </div>
                </div>
                 <div className='profile__main-content'>
-                    <Playlist userId={userInfo.personId}></Playlist>
-                    <Comments userId={userInfo.personId}></Comments>
+                    <Playlist setPlaylistCount={changePlaylistCount} userId={userInfo.personId}></Playlist>
+                    <Comments setReviewCount={changeReviewCount} userId={userInfo.personId}></Comments>
                 </div>
             </main>
         </div>
