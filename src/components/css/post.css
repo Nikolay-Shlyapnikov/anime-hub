@@ -159,8 +159,13 @@
     border-bottom: 1px solid #fda022;
 }
 .comment__item{
-    padding: 20px 0;
+    padding: 20px 10px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
 }
+
 .comment__title {
     text-align: center;
     font-size: 25px;

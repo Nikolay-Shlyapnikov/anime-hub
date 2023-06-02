@@ -38,7 +38,6 @@ const Comments = (props:commentstInterface) =>{
         try {
             const response = await fetch(`${domain}/getPersonComment`, requestOptions);
             const data = await response.json();
-            console.log(data);
             setComments(data);
             props.setReviewCount(data.length);
         } catch (error) {

@@ -3,6 +3,7 @@ import Header from "../components/header";
 import '../components/css/adminPanel.css'
 import UserItem from "../components/userItem";
 import {DomainContext} from "../index";
+
 export interface user{
     createdAt: string
     age: number
@@ -38,16 +39,20 @@ function MainPage() {
                 personId: userInfo.personId
             })
         }
-        await fetch(`${domain}/userList`, requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                setState(prevState => {
-                    return {
-                        ...prevState,
-                        users: data
-                    };
-                });
+        try {
+            const response = await fetch(`${domain}/userList`, requestOptions);
+            const data = await response.json();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    users: data
+                };
             });
+        } catch (error) {
+            console.log(error);
+        } finally {
+
+        }
     }
     const getRoles = async () => {
         const requestOptions = {
@@ -56,27 +61,57 @@ function MainPage() {
             body:JSON.stringify({
                 personId: userInfo.personId
             })
-        }
-        await fetch(`${domain}/roleList`, requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                setState(prevState => {
-                    return {
-                        ...prevState,
-                        roles: data
-                    };
-                });
+        };
+        try {
+            const response = await fetch(`${domain}/roleList`, requestOptions);
+            const data = await response.json();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    roles: data
+                };
             });
+        } catch (error) {
+            console.log(error);
+        } finally {
+
+        }
+    }
+    const getReports = async () => {
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body:JSON.stringify({
+                personId: userInfo.personId
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/getReports`, requestOptions);
+            const data = await response.json();
+            console.log(data);
+            // setState(prevState => {
+            //     return {
+            //         ...prevState,
+            //         roles: data
+            //     };
+            // });
+        } catch (error) {
+            console.log(error);
+        } finally {
+
+        }
     }
     useEffect(()=>{
         getUsers();
         getRoles();
+        getReports();
     }, []);
     const userList = (state.users as adminPanelInterface['users']).map((user, index) => {
         return (
             <UserItem user={user} roles={state.roles}/>
         )
     });
+    const reportList = 0;
     return (
         <div>
             <Header/>
@@ -92,6 +127,16 @@ function MainPage() {
                         <th>Роль</th>
                     </thead>
                     {userList}
+                </table>
+                <table className={'report__table'} align={'center'}>
+                    <caption>Таблица жалоб</caption>
+                    <thead>
+                        <th>Отправил:</th>
+                        <th>Текст комментария</th>
+                        <th>Автор комментария</th>
+                        <th>Действие</th>
+                    </thead>
+                    {reportList}
                 </table>
             </main>
         </div>

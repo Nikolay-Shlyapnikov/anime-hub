@@ -1,26 +1,55 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import '../components/css/post.css';
 import {responseInterface} from "../pages/postPage";
 import CommentsForm from "./forms/comment";
 import {Link} from "react-router-dom";
-
+import {DomainContext} from "../index";
 interface propsInterface {
     postInfo: responseInterface;
     submit:React.FormEventHandler<HTMLFormElement>
     textChange: React.ChangeEventHandler<HTMLTextAreaElement>
 }
+
 const PostComments = (props:propsInterface) => {
     const post= props.postInfo.Post;
-    const comments = props.postInfo.Comments
+    const comments = props.postInfo.Comments;
+    const domain = useContext(DomainContext);
+    const userInfo = JSON.parse(localStorage.getItem('user')!);
+    const addReport = async (e:React.MouseEvent<HTMLElement>)=>{
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body:JSON.stringify({
+                commentId: e.currentTarget.dataset.id
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/addReport`, requestOptions);
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+
+        }
+    }
+
     const commentsContent = comments.map((comment)=>{
         return(
             <div key={comment.commentId} className="comment__item">
-                <div className="comment__info">
-                    <img className="comment__author-image" src={comment.imagePath} alt="Аватар автора"/>
-                    <Link to={`/profile/${comment.userId}`} className="comment__author-name">{comment.userLogin}</Link>
-                    <span className="comment__date">{comment.createdAt}</span>
+                <div className={'comment__wrapper'}>
+                    <div className="comment__info">
+                        <img className="comment__author-image" src={comment.imagePath} alt="Аватар автора"/>
+                        <Link to={`/profile/${comment.userId}`} className="comment__author-name">{comment.userLogin}</Link>
+                        <span className="comment__date">{comment.createdAt}</span>
+                    </div>
+                    <p className="comment__text">{comment.text}</p>
                 </div>
-                <p className="comment__text">{comment.text}</p>
+                <div className={'comment__button'}>
+                    <button className={'profile__button profile__button--top'} data-id={comment.commentId} onClick={addReport}>
+                        Пожаловаться
+                    </button>
+                </div>
             </div>
         )});
 
