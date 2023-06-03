@@ -41,3 +41,32 @@
     opacity: 0;
     transition: opacity 4s ease-out; /* Adjust the duration and easing function as desired */
 }
+.report__table{
+    display: grid;
+    grid-template-columns: repeat(5,auto);
+    border-radius: 20px;
+    border: 1px solid #fda022;
+    overflow: hidden;
+}
+.report__table-title{
+    grid-column: 1/-1;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 20px 0 20px 0;
+    text-align: center;
+}
+.report__table-head{
+    background: #fda022;
+    padding: 5px;
+    text-align: center;
+    color: #FFF;
+    font-size: 17px;
+    font-weight: 600;
+}
+.report__table-cell{
+    margin: 10px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #fda022;
+}

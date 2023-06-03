@@ -32,7 +32,8 @@ interface CommentInterface{
     text: string,
     userId: number,
     userLogin: string,
-    imagePath:string
+    imagePath:string,
+    postId: number
 }
 export interface responseInterface {
     Post: PostInterface;

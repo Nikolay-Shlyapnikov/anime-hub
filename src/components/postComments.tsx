@@ -20,7 +20,8 @@ const PostComments = (props:propsInterface) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body:JSON.stringify({
-                commentId: e.currentTarget.dataset.id
+                commentId: e.currentTarget.dataset.comment_id,
+                postId: e.currentTarget.dataset.post_id
             })
         };
         try {
@@ -46,7 +47,7 @@ const PostComments = (props:propsInterface) => {
                     <p className="comment__text">{comment.text}</p>
                 </div>
                 <div className={'comment__button'}>
-                    <button className={'profile__button profile__button--top'} data-id={comment.commentId} onClick={addReport}>
+                    <button className={'profile__button profile__button--top'} data-post_id={comment.postId} data-comment_id={comment.commentId} onClick={addReport}>
                         Пожаловаться
                     </button>
                 </div>
