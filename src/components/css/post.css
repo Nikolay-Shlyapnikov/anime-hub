@@ -232,3 +232,8 @@ textarea:focus {
     display: flex;
     justify-content: center;
 }
+.reported-label{
+    margin: 15px 0;
+    color: green;
+    font-weight: 600;
+}

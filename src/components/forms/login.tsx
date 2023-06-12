@@ -67,7 +67,7 @@ const LoginForm = () => {
                     </div>
                     <div className={'input__wrapper'}>
                         <p className={'input__title'}>Введите пароль:</p>
-                        <input className={'input'} placeholder={'qwerty'} type="text" value={password} onInput={passwordChange} />
+                        <input className={'input'} placeholder={'qwerty'} type="password" value={password} onInput={passwordChange} />
                         {
                             errorAuth && errorAuth === 'Пароль не верный' ? <p className={'input__error'}>{errorAuth}</p> : null
                         }

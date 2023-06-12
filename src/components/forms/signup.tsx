@@ -137,7 +137,7 @@ const RegistrationForm = () => {
                         </div>
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Введите пароль:</p>
-                            <input className={'input'} placeholder={'qwerty'} type="text" value={state.password} onInput={passwordChange} />
+                            <input className={'input'} placeholder={'qwerty'} type="password" value={state.password} onInput={passwordChange} />
                             {
                                 state.errorPassword.length ?
                                     state.errorPassword.map((error, index) =>
@@ -147,7 +147,7 @@ const RegistrationForm = () => {
                         </div>
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Потворите пароль:</p>
-                            <input className={'input'} placeholder={'qwerty'}  type="text" value={state.passwordRepeat} onInput={passwordRepeatChange} />
+                            <input className={'input'} placeholder={'qwerty'}  type="password" value={state.passwordRepeat} onInput={passwordRepeatChange} />
                         </div>
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Выберите фото профиля:</p>
