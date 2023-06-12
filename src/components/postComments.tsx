@@ -8,6 +8,7 @@ interface propsInterface {
     postInfo: responseInterface;
     submit:React.FormEventHandler<HTMLFormElement>
     textChange: React.ChangeEventHandler<HTMLTextAreaElement>
+    deleteComment: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const PostComments = (props:propsInterface) => {
@@ -50,6 +51,10 @@ const PostComments = (props:propsInterface) => {
                     <button className={'profile__button profile__button--top'} data-post_id={comment.postId} data-comment_id={comment.commentId} onClick={addReport}>
                         Пожаловаться
                     </button>
+                    {comment.userId == userInfo.personId || userInfo.personRole == 3 || userInfo.personRole == 4 ?
+                        <button className={'profile__button profile__button--top'} data-post_id={comment.postId} data-comment_id={comment.commentId} onClick={props.deleteComment}>
+                            Удалить
+                        </button>: null}
                 </div>
             </div>
         )});

@@ -158,7 +158,26 @@ const PostPage = () =>{
                 }
             }
     }
+    const deleteComment = async (e:React.MouseEvent<HTMLElement>)=>{
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body:JSON.stringify({
+                commentId: e.currentTarget.dataset.comment_id,
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/delPersonComment`, requestOptions);
+            const data = await response.json();
+            if(data.success == 'true'){
+                getPost();
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
 
+        }
+    }
     const textChange =(event: React.ChangeEvent<HTMLTextAreaElement>)=>{
         setComment(event.target.value);
     }
@@ -217,7 +236,7 @@ const PostPage = () =>{
             setIsLoading(false);
         }
     }
-    const buttonsContent = user.personRole == 3 ?  <div className={'post__button-wrapper'}>
+    const buttonsContent = user.personRole == 3 || user.personRole == 4 ?  <div className={'post__button-wrapper'}>
         <button onClick={updatePost} className={'button'}>Отредактировать</button>
         <button onClick={deletePost} className={'button'}>Удалить пост</button>
     </div> : null;
@@ -229,7 +248,7 @@ const PostPage = () =>{
                 <PostInfo postInfo={post}></PostInfo>
                 <p className={'post__description'}>{post.Post.description}</p>
                 {buttonsContent}
-                <PostComments  submit={submitComment} textChange={textChange} postInfo={post!}></PostComments>
+                <PostComments deleteComment={deleteComment} submit={submitComment} textChange={textChange} postInfo={post!}></PostComments>
             </main>
         </div>
     )

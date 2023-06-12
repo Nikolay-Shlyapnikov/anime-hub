@@ -185,11 +185,14 @@ function MainPage() {
             </>
         )
     }) : <h3 className={'report__table-title'}>Жалобы</h3>;
+    console.log(userInfo)
     return (
         <div>
             <Header/>
             <main className="container">
-                <table className={'user__table'} >
+                {
+                    userInfo.personRole == 4 ?
+                   <table className={'user__table'} >
                     <caption>Пользователи</caption>
                     <thead>
                         <th>Логин</th>
@@ -200,10 +203,9 @@ function MainPage() {
                         <th>Роль</th>
                     </thead>
                     {userList}
-                </table>
+                </table> : null}
                 <h3 className={'report__table-title'}>Жалобы</h3>
                 <div className={'report__table'}>
-
                     <p className={'report__table-head'}>Текст комментария</p>
                     <p className={'report__table-head'}>Автор комментария</p>
                     <p className={'report__table-head'}>Количество жалоб</p>

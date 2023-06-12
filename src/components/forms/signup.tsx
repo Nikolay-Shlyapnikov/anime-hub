@@ -2,13 +2,12 @@ import React, {useContext, useState} from "react";
 import "../css/form.css";
 import { Link, useNavigate } from "react-router-dom";
 import {DomainContext} from "../../index";
-
 interface registrationFormState {
     login: string;
     password: string;
     passwordRepeat: string;
     file: string | null;
-    age: number | null;
+    age: string;
     email: string;
     fileName: string;
     errorLogin: Array<string>;
@@ -23,7 +22,7 @@ const RegistrationForm = () => {
         password: "",
         passwordRepeat: "",
         file: null,
-        age: null,
+        age: "",
         email: "",
         fileName: "не выбран",
         errorLogin: [],
@@ -49,8 +48,8 @@ const RegistrationForm = () => {
             passwordRepeat: event.target.value,
         }));
     };
-    const ageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const age = parseInt(event.target.value);
+    const ageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const age = event.target.value;
         setState((prevState) => ({ ...prevState, age }));
     };
     const fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +84,6 @@ const RegistrationForm = () => {
         }
 
     };
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const requestOptions = {
@@ -119,7 +117,6 @@ const RegistrationForm = () => {
 
     }
 
-        const options = Array.from({ length: 94 }, (_, i) => <option key={i}>{i+7}</option>);
         return (
             <section>
                 <h1 className={"form__title"}>Регистрация</h1>
@@ -165,7 +162,7 @@ const RegistrationForm = () => {
                         </div>
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Укажите возраст:</p>
-                            <select className={'select'} onChange={ageChange}>{options}</select>
+                            <input className={'input'} placeholder={'2002-01-01'}  min="1923-01-01"  max={new Date().toISOString().split("T")[0]} type="date" value={state.age} onChange={ageChange} />
                         </div>
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Введите email:</p>

@@ -2,6 +2,7 @@ import React,{ useState, useEffect, useContext } from 'react';
 import {DomainContext} from "../index";
 import './css/catalog.css'
 import CatalogItem from "./catalogItem";
+import {userInfo} from "os";
 interface CatalogInterface {
     sort: string;
     filterType: {text: string, number: number};
@@ -25,6 +26,7 @@ interface Post {
 }
 const Catalog = (catalogProps: CatalogInterface) => {
     const domain = useContext(DomainContext);
+    const userInfo = JSON.parse(localStorage.getItem('user')!)
     let sortSetting: {text: string, number: number};
     catalogProps.sort === 'date' ? sortSetting = {text: 'дате', number: 1}:
         catalogProps.sort === 'title' ? sortSetting ={text: 'алфавиту', number: 3}:
@@ -46,7 +48,8 @@ const Catalog = (catalogProps: CatalogInterface) => {
                 sort: sortSetting.number,
                 sortBy: sortBy.number,
                 filterType: catalogProps.filterType.number,
-                filterGenre: catalogProps.filterGenre.number
+                filterGenre: catalogProps.filterGenre.number,
+                userId: userInfo != null ? userInfo.personId : ''
             })
         };
         try {
