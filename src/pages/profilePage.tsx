@@ -13,7 +13,7 @@ interface profilePageInterface {
 function ProfilePage() {
     const domain = useContext(DomainContext);
     const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
-    const [XXX, setXXX] = useState<boolean>(userInfo.xxxContent);
+    const [XXX, setXXX] = useState<number>(userInfo.xxxContent ? 1 : 0);
     const [countPlaylist, setCountPlaylist] = useState(0);
     const [countReview, setCountReview] = useState(0);
     const [personAge, setPersonAge] = useState(0);
@@ -32,14 +32,16 @@ function ProfilePage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 personId : userInfo.personId,
-                xxxContent: XXX ? 1 : 0,
+                xxxContent: XXX == 1 ? 0 : 1,
             })
         };
         try {
             const response = await fetch(`${domain}/updateXXX`, requestOptions);
             const data = await response.json();
             if(data.success == 'true'){
-                setXXX(!XXX)
+                setXXX(XXX == 1 ? 0 : 1)
+                userInfo.xxxContent = !userInfo.xxxContent
+                localStorage.setItem('user',JSON.stringify(userInfo))
             }
         } catch (error) {
             console.log(error);

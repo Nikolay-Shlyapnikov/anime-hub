@@ -236,7 +236,7 @@ const PostPage = () =>{
             setIsLoading(false);
         }
     }
-    const buttonsContent = user.personRole == 3 || user.personRole == 4 ?  <div className={'post__button-wrapper'}>
+    const buttonsContent = user != null && (user.personRole == 3 || user.personRole == 4) ?  <div className={'post__button-wrapper'}>
         <button onClick={updatePost} className={'button'}>Отредактировать</button>
         <button onClick={deletePost} className={'button'}>Удалить пост</button>
     </div> : null;
