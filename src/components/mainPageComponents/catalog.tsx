@@ -77,7 +77,6 @@ const Catalog = (catalogProps: CatalogInterface) => {
                     id={post.id}
                     title={post.title}
                     year={post.year}
-                    type={post.typeId}
                     imagePath={post.imagePath}
                 />
             )
@@ -92,7 +91,6 @@ const Catalog = (catalogProps: CatalogInterface) => {
             { catalogProps.filterGenre.text !== '' && catalogProps.filterGenre.text !=='По умолчанию' ? <p className="catalog__subtitle">Фильтрация по жанру: {catalogProps.filterGenre.text}</p> : null}
             { catalogProps.filterType.text !== '' && catalogProps.filterType.text !=='По умолчанию' ? <p className="catalog__subtitle">Фильтрация по типу: {catalogProps.filterType.text}</p> : null}
             {sortSetting.text !== 'default' && sortSetting.text !== '' ? <p className="catalog__subtitle">Сортировка по {sortSetting.text} ({sortBy.text})</p> : null}
-            { }
             <div className="catalog__wrapper">
                 {catalogContent}
             </div>
