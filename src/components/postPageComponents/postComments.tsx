@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import '../css/post.css';
 import {responseInterface} from "../../pages/postPage";
 import CommentsForm from "../forms/comment";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {DomainContext} from "../../index";
 interface propsInterface {
     postInfo: responseInterface;
@@ -15,24 +15,30 @@ const PostComments = (props:propsInterface) => {
     const post= props.postInfo.Post;
     const comments = props.postInfo.Comments;
     const domain = useContext(DomainContext);
-    const userInfo = JSON.parse(localStorage.getItem('user')!);
+    const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
+    const navigate = useNavigate();
     const addReport = async (e:React.MouseEvent<HTMLElement>)=>{
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body:JSON.stringify({
-                commentId: e.currentTarget.dataset.comment_id,
-                postId: e.currentTarget.dataset.post_id
-            })
-        };
-        try {
-            const response = await fetch(`${domain}/addReport`, requestOptions);
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.log(error);
-        } finally {
+        if(userInfo == null){
+            navigate('/login');
+        }
+        else {
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body:JSON.stringify({
+                    commentId: e.currentTarget.dataset.comment_id,
+                    postId: e.currentTarget.dataset.post_id
+                })
+            };
+            try {
+                const response = await fetch(`${domain}/addReport`, requestOptions);
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            } finally {
 
+            }
         }
     }
 
@@ -51,7 +57,7 @@ const PostComments = (props:propsInterface) => {
                     <button className={'profile__button profile__button--top'} data-post_id={comment.postId} data-comment_id={comment.commentId} onClick={addReport}>
                         Пожаловаться
                     </button>
-                    {comment.userId == userInfo.personId || userInfo.personRole == 3 || userInfo.personRole == 4 ?
+                    {userInfo != null && (comment.userId == userInfo.personId || userInfo.personRole == 3 || userInfo.personRole == 4) ?
                         <button className={'profile__button profile__button--top'} data-post_id={comment.postId} data-comment_id={comment.commentId} onClick={props.deleteComment}>
                             Удалить
                         </button>: null}
@@ -62,7 +68,7 @@ const PostComments = (props:propsInterface) => {
     return (
         <div className="post__comments">
             <CommentsForm textChange={props.textChange} submit={props.submit} id={post.id}></CommentsForm>
-            <p className={'comment__title'}>Комментарии:</p>
+            {comments.length > 0 && <p className={'comment__title'}>Комментарии:</p>}
             {commentsContent}
         </div>
     )
