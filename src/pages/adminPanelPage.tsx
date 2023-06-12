@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Header from "../components/header";
 import '../components/css/adminPanel.css'
-import UserItem from "../components/userItem";
+import UserItem from "../components/adminPageComponents/userItem";
 import {DomainContext} from "../index";
 import {useNavigate} from "react-router-dom";
 

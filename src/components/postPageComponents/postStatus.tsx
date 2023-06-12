@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {userInfoInterface} from "./forms/login";
-import '../components/css/post.css';
-import {DomainContext} from "../index";
-import LikeForm from "./forms/likeForm";
+import {userInfoInterface} from "../forms/login";
+import '../css/post.css';
+import {DomainContext} from "../../index";
+import LikeForm from "../forms/likeForm";
 export interface PlaylistInterface {
     playlistId:number
     createdAt: string

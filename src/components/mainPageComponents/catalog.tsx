@@ -1,6 +1,6 @@
 import React,{ useState, useEffect, useContext } from 'react';
-import {DomainContext} from "../index";
-import './css/catalog.css'
+import {DomainContext} from "../../index";
+import '../css/catalog.css'
 import CatalogItem from "./catalogItem";
 import {userInfo} from "os";
 interface CatalogInterface {

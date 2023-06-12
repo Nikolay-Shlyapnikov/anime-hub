@@ -2,11 +2,11 @@ import React, {useContext, useEffect, useState, } from 'react'
 import { useLocation , useNavigate} from "react-router-dom";
 import Header from "../components/header";
 import '../components/css/post.css';
-import PostStatus from "../components/postStatus";
+import PostStatus from "../components/postPageComponents/postStatus";
 
 import {DomainContext} from "../index";
-import PostInfo from "../components/postInfo";
-import PostComments from "../components/postComments";
+import PostInfo from "../components/postPageComponents/postInfo";
+import PostComments from "../components/postPageComponents/postComments";
 export interface PostInterface{
     id: number,
     createdAt: string,

@@ -1,9 +1,9 @@
 import React, {useContext} from 'react'
-import '../components/css/post.css';
-import {responseInterface} from "../pages/postPage";
-import CommentsForm from "./forms/comment";
+import '../css/post.css';
+import {responseInterface} from "../../pages/postPage";
+import CommentsForm from "../forms/comment";
 import {Link} from "react-router-dom";
-import {DomainContext} from "../index";
+import {DomainContext} from "../../index";
 interface propsInterface {
     postInfo: responseInterface;
     submit:React.FormEventHandler<HTMLFormElement>

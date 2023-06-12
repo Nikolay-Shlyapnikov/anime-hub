@@ -14,6 +14,7 @@ interface registrationFormState {
     errorPassword: Array<string>;
     errorEmail: Array<string>;
     errorPhoto: Array<string>;
+    ageError: Array<string>;
 }
 
 const RegistrationForm = () => {
@@ -25,6 +26,7 @@ const RegistrationForm = () => {
         age: "",
         email: "",
         fileName: "не выбран",
+        ageError: [],
         errorLogin: [],
         errorPassword: [],
         errorEmail: [],
@@ -111,6 +113,7 @@ const RegistrationForm = () => {
                         errorLogin: [data.loginError, data.registrationLoginError],
                         errorPassword: data.passwordError,
                         errorEmail: [data.mailError, data.registrationMailError],
+                        ageError: [data.ageError],
                     };
                 });
             });
@@ -163,6 +166,12 @@ const RegistrationForm = () => {
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Укажите возраст:</p>
                             <input className={'input'} placeholder={'2002-01-01'}  min="1923-01-01"  max={new Date().toISOString().split("T")[0]} type="date" value={state.age} onChange={ageChange} />
+                            {
+                                state.ageError.length ?
+                                    state.ageError.map((error, index) =>
+                                        (<p key={'passwordError'+index}  className={'input__error'}>{error}</p>
+                                        )) : null
+                            }
                         </div>
                         <div className={'input__wrapper'}>
                             <p className={'input__title'}>Введите email:</p>

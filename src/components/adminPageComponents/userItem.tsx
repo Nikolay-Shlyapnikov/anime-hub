@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {user} from "../pages/adminPanelPage";
-import {role} from "../pages/adminPanelPage";
-import {DomainContext} from "../index";
+import {user} from "../../pages/adminPanelPage";
+import {role} from "../../pages/adminPanelPage";
+import {DomainContext} from "../../index";
 interface userItemInterface{
     user: user;
     roles: Array<role>

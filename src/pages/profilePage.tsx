@@ -1,21 +1,22 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Header from "../components/header";
 import '../components/css/style.css'
 import '../components/css/null.css'
 import '../components/css/profile.css'
-import Comments from "../components/comments";
-import Playlist from "../components/playlist";
+import Comments from "../components/profilePageComponents/comments";
+import Playlist from "../components/profilePageComponents/playlist";
 import {Link, useLocation} from "react-router-dom";
+import {DomainContext} from "../index";
 interface profilePageInterface {
     XXX: boolean;
 }
 function ProfilePage() {
+    const domain = useContext(DomainContext);
     const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
     const [XXX, setXXX] = useState<boolean>(userInfo.xxxContent);
     const [countPlaylist, setCountPlaylist] = useState(0);
     const [countReview, setCountReview] = useState(0);
-    // let countPlaylist = 5;
-    // let countReview = 10;
+    const [personAge, setPersonAge] = useState(0);
     const location = useLocation();
     let playListCreate;
     location.state ? playListCreate = location.state : playListCreate = false;
@@ -25,15 +26,55 @@ function ProfilePage() {
     const changePlaylistCount = (value:number) => {
         setCountPlaylist(value);
     };
-    const changeXXX = () => setXXX(!XXX);
+    const changeXXX = async () => {
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                personId : userInfo.personId,
+                xxxContent: XXX ? 1 : 0,
+            })
+        };
+        try {
+            const response = await fetch(`${domain}/updateXXX`, requestOptions);
+            const data = await response.json();
+            if(data.success == 'true'){
+                setXXX(!XXX)
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+
+        }
+    };
+    const calculateAge = (dateOfBirth: string) => {
+        const today = new Date();
+        const birthDate = new Date(dateOfBirth);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+            age--;
+        }
+        return age;
+    }
+    useEffect(()=>{
+        setPersonAge(calculateAge(userInfo.personAge));
+    },[])
     return (
         <div>
             <Header/>
             <main className="profile__container container">
                 <div className='profile__name-wrapper'>
-                    <h1 className='profile__name'>{userInfo.personLogin}, {userInfo.personAge}</h1>
+                    <h1 className='profile__name'>{userInfo.personLogin}, {personAge}</h1>
                     {
                         userInfo.personRole == 4 && <Link className='profile__button profile__button--top' to={'/admin'}>Панель администратора</Link>
+                    }
+                    {
+                        userInfo.personRole == 3 && <Link className='profile__button profile__button--top' to={'/admin'}>Панель модератора</Link>
                     }
                     {
                         userInfo.personRole == 4 || userInfo.personRole == 3 ? <Link className='profile__button profile__button--top' to={'/postForm'}>Создать новый пост</Link>: null
@@ -78,7 +119,7 @@ function ProfilePage() {
                         <p style={{margin: '13px 0 0 0'}} className='profile__text'>Количество отзывов: {countReview}</p>
                    </div>
                    <div className='profile__right-side'>
-                           {userInfo.personAge > 18 ? <div className='profile__checkbox-wrapper profile__text'><button className={`profile__checkbox ${XXX ? 'active': ''}`} onClick={changeXXX}></button> Отображать контент 18+?</div> : ''}
+                           {personAge > 18 ? <div className='profile__checkbox-wrapper profile__text'><button className={`profile__checkbox ${XXX ? 'active': ''}`} onClick={changeXXX}></button> Отображать контент 18+?</div> : ''}
                        <Link to={'/playlistForm'}className='profile__button'>Создать плейлист</Link>
                        {
                            playListCreate ? <p className={'profile__text green'}>Вы создали плейлист</p>: null

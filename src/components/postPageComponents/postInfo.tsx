@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import '../components/css/post.css';
-import {responseInterface} from "../pages/postPage";
+import '../css/post.css';
+import {responseInterface} from "../../pages/postPage";
 
 interface propsInterface {
     postInfo: responseInterface;

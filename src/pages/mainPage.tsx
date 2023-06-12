@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/header";
-import Catalog from "../components/catalog";
+import Catalog from "../components/mainPageComponents/catalog";
 import '../components/css/style.css'
 import '../components/css/null.css'
-import Sidebar from "../components/sidebar";
+import Sidebar from "../components/mainPageComponents/sidebar";
 
 interface mainPageInterface {
     filterType: {text: string, number: number};

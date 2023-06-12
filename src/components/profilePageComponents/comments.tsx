@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState} from 'react';
-import './css/comments.css'
-import {DomainContext} from "../index";
+import '../css/comments.css'
+import {DomainContext} from "../../index";
 import {useNavigate} from "react-router-dom";
 interface commentstInterface{
     userId: number;

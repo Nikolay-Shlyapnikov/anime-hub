@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import './css/playlist.css'
-import {PlaylistInterface} from "./postStatus";
-import {PostInterface} from "../pages/postPage";
-import {DomainContext} from "../index";
+import '../css/playlist.css'
+import {PlaylistInterface} from "../postPageComponents/postStatus";
+import {PostInterface} from "../../pages/postPage";
+import {DomainContext} from "../../index";
 import {useNavigate} from "react-router-dom";
 interface playlistInterface{
     userId: number;

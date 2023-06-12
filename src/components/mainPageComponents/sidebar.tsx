@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Filter from "./filter";
-import './css/sidebar.css'
+import '../css/sidebar.css'
 import Sort from "./sort";
 interface sidebarPropsInterface {
     onChangeFilterType: React.MouseEventHandler<HTMLLIElement>;
