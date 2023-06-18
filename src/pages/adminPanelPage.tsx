@@ -4,6 +4,7 @@ import '../components/css/adminPanel.css'
 import UserItem from "../components/adminPageComponents/userItem";
 import {DomainContext} from "../index";
 import {useNavigate} from "react-router-dom";
+import Search from "../components/mainPageComponents/search";
 
 export interface user{
     createdAt: string
@@ -120,11 +121,13 @@ function MainPage() {
         getRoles();
         getReports();
     }, []);
-    const userList = (state.users as adminPanelInterface['users']).map((user, index) => {
+
+    const userList = state.users.length > 0 ? (state.users as adminPanelInterface['users']).map((user, index) => {
+        console.log(state.users.length);
         return (
             <UserItem user={user} roles={state.roles}/>
         )
-    });
+    }) :  <tr className={'user__table-empty'}><td colSpan={6}>Пользователи не найдены</td></tr>;
     const postItemCLick = (e: React.MouseEvent<HTMLElement>) =>{
         navigate('/post', {state: e.currentTarget.dataset.post_id});
     }
@@ -175,17 +178,40 @@ function MainPage() {
                 <p className={'report__table-cell'}>{report.commentText}</p>
                 <p className={'report__table-cell'}>{report.commentAuthor}</p>
                 <p className={'report__table-cell'}>{report.reportsCount}</p>
-                <p className={'report__table-cell'} data-post_id={report.postId} onClick={postItemCLick}>{report.postTitle}</p>
+                <p className={'report__table-cell post__cell'} data-post_id={report.postId} onClick={postItemCLick}>{report.postTitle}</p>
                 <div className={'report__table-cell'} >
                     <button data-report_id={report.reportId} data-comment_id={report.commentId} onClick={deleteComment}>
                         Удалить
                     </button>
-                    <button data-report_id={report.reportId} onClick={deleteReport}>Простить</button>
+                    <button data-report_id={report.reportId} onClick={deleteReport}>Оставить</button>
                 </div>
             </>
         )
-    }) : <h3 className={'report__table-title'}>Жалобы</h3>;
-    console.log(userInfo)
+    }) : <h3 className={'report__table-title'}>Жалобы отсутствуют</h3>;
+    const getSearchUser = async(e:React.ChangeEvent<HTMLInputElement>)=>{
+        const value = e.currentTarget.value;
+        if(value !=null){
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body:JSON.stringify({
+                    search: value
+                })
+            }
+            try {
+                const response = await fetch(`${domain}/searchUser`, requestOptions);
+                const data = await response.json();
+                setState(prevState => {
+                    return {
+                        ...prevState,
+                        users: data
+                    };
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
     return (
         <div>
             <Header/>
@@ -193,7 +219,7 @@ function MainPage() {
                 {
                     userInfo.personRole == 4 ?
                    <table className={'user__table'} >
-                    <caption>Пользователи</caption>
+                    <caption>Пользователи <Search onChangeSearch={getSearchUser}/></caption>
                     <thead>
                         <th>Логин</th>
                         <th>Дата регистрации</th>

@@ -8,6 +8,7 @@
     border-radius: 10px;
     padding: 0 3px 3px 3px;
     transition: all 0.4s ease-out;
+    position: relative;
 }
 .user__table tr{
     border: none;
@@ -20,6 +21,9 @@
     font-size: 25px;
     font-weight: 600;
     margin: 20px 0 20px 0;
+}
+.user__table .catalog__item{
+    display: block;
 }
 .user__select{
     width: auto;
@@ -41,12 +45,21 @@
     opacity: 0;
     transition: opacity 4s ease-out; /* Adjust the duration and easing function as desired */
 }
+.post__cell{
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.post__cell:hover{
+    color: #fda022;
+    transition: all 0.3s ease;
+}
 .report__table{
     display: grid;
     grid-template-columns: repeat(5,auto);
     border-radius: 20px;
     border: 1px solid #fda022;
     overflow: hidden;
+    margin-bottom: 50px;
 }
 .report__table-title{
     grid-column: 1/-1;
@@ -77,4 +90,15 @@
     border-radius: 10px;
     margin: 10px 0 5px 5px;
     cursor: pointer;
+    transition: all 0.3s ease;
+}
+.report__table button:hover{
+    transition: all 0.3s ease;
+    background: #fda022;
+    color: #FFF;
+}
+
+.user__table-empty{
+    font-size: 25px;
+    font-weight: 600;
 }

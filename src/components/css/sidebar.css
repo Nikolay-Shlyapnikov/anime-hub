@@ -76,3 +76,13 @@
     top:15px;
     transform: rotate(45deg);
 }
+.search_input{
+    border: 1px solid #fda022;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 17px;
+    outline: none;
+}
+.search_input:focus{
+    box-shadow: 1px 0px 2px #fda022;
+}

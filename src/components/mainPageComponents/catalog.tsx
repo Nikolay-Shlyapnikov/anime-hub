@@ -4,25 +4,26 @@ import '../css/catalog.css'
 import CatalogItem from "./catalogItem";
 import {userInfo} from "os";
 interface CatalogInterface {
-    sort: string;
-    filterType: {text: string, number: number};
-    filterGenre: {text: string, number: number};
-    sortBy: string;
+    sort: string
+    filterType: {text: string, number: number}
+    filterGenre: {text: string, number: number}
+    sortBy: string
+    search: string
 }
 interface Post {
-    id: number,
-    createdAt: string,
-    title: string,
-    description: string,
-    year: string,
-    imagePath: string,
-    videoPath:string,
-    episodeCount:number,
-    episodeDuration:string,
-    userId: number,
-    typeId: number,
-    rating: number,
-    genreId: number,
+    id: number
+    createdAt: string
+    title: string
+    description: string
+    year: string
+    imagePath: string
+    videoPath:string
+    episodeCount:number
+    episodeDuration:string
+    userId: number
+    typeId: number
+    rating: number
+    genreId: number
 }
 const Catalog = (catalogProps: CatalogInterface) => {
     const domain = useContext(DomainContext);
@@ -65,6 +66,28 @@ const Catalog = (catalogProps: CatalogInterface) => {
     useEffect(() => {
         getSortedPosts();
     }, [catalogProps.sort,catalogProps.sortBy,catalogProps.filterType,catalogProps.filterGenre ]);
+   const searchPost = async () => {
+       setIsLoading(true);
+       const requestOptions = {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({
+              search: catalogProps.search
+           })
+       };
+       try {
+           const response = await fetch(`${domain}/search`, requestOptions);
+           const data:Post[] = await response.json();
+           setPosts(data);
+       } catch (error) {
+           console.log(error);
+       } finally {
+           setIsLoading(false);
+       }
+   }
+    useEffect(() => {
+        searchPost();
+    }, [catalogProps.search]);
     let catalogContent;
     if(posts.length == 0){
         catalogContent = <p className="catalog__title">Посты не найдены</p>;
@@ -78,6 +101,7 @@ const Catalog = (catalogProps: CatalogInterface) => {
                     title={post.title}
                     year={post.year}
                     imagePath={post.imagePath}
+                    rating={post.rating}
                 />
             )
         });

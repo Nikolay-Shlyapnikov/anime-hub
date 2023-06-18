@@ -19,7 +19,7 @@ interface comment{
 const Comments = (props:commentstInterface) =>{
     const domain = useContext(DomainContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [comments, setComments] = useState<comment[] | string>('У вас нет комментариев');
+    const [comments, setComments] = useState<comment[] | string>('Вы пока не оставляли комментариев');
     const [commentsContent, setCommentsContent] = useState<React.JSX.Element[] | React.JSX.Element>([]);;
     const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const Comments = (props:commentstInterface) =>{
         try {
             const response = await fetch(`${domain}/getPersonComment`, requestOptions);
             const data = await response.json();
-            setComments(data);
+            data.length > 0 ? setComments(data) : setComments('Вы пока не оставляли комментариев')
             props.setReviewCount(data.length);
         } catch (error) {
             console.log(error);
@@ -50,7 +50,7 @@ const Comments = (props:commentstInterface) =>{
         let commentContents: JSX.Element[] = [];
 
         if (typeof comments === 'string') {
-            commentContents = [<div key={0} className="profile__comment-item">{comments}</div>];
+            commentContents = [<div key={0} className="profile__comment-empty">{comments}</div>];
         } else if (Array.isArray(comments)) {
             commentContents = (comments as comment[]).map((comment, index) => (
                 <div key={index} className="profile__comment-item">

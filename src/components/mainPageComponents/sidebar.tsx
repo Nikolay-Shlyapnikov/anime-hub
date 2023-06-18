@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Filter from "./filter";
 import '../css/sidebar.css'
 import Sort from "./sort";
+import Search from "./search";
 interface sidebarPropsInterface {
     onChangeFilterType: React.MouseEventHandler<HTMLLIElement>;
     onChangeFilterGenre: React.MouseEventHandler<HTMLLIElement>;
@@ -10,6 +11,7 @@ interface sidebarPropsInterface {
     filterGenreArray: {text: string, number: number}[];
     filterTypeArray: {text: string, number: number}[];
     onChangeSort: React.MouseEventHandler<HTMLLIElement>;
+    onChangeSearch: React.ChangeEventHandler<HTMLInputElement>;
     sort: string;
 }
 
@@ -18,6 +20,7 @@ const Sidebar = (props:sidebarPropsInterface) => {
     return (
         <section className="sidebar">
             <div className='sidebar__inner'>
+                <Search onChangeSearch={props.onChangeSearch} ></Search>
                 <Filter filterArray={props.filterGenreArray} onChangeFilter={props.onChangeFilterGenre} filterName={'Жанры'} filter={props.filterGenre.number}></Filter>
                 <Filter filterArray={props.filterTypeArray} onChangeFilter={props.onChangeFilterType} filterName={'Типы'} filter={props.filterType.number}></Filter>
                 <Sort onChangeSort={props.onChangeSort} sort={props.sort}></Sort>

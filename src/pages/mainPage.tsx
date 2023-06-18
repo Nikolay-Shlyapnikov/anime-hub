@@ -14,6 +14,7 @@ interface mainPageInterface {
     sortBy: string;
     filterGenreArray: {text: string, number: number}[];
     filterTypeArray: {text: string, number: number}[];
+    search: string;
 }
 function MainPage() {
     const filterType = [
@@ -35,9 +36,9 @@ function MainPage() {
         sortItemState:'',
         sortBy: '',
         filterGenreArray: filterGenre,
-        filterTypeArray: filterType
+        filterTypeArray: filterType,
+        search: ''
     });
-    const location = useLocation();
     const changeFilterType = (event: React.MouseEvent<HTMLElement>) => {
         const filterNumber = Number(event.currentTarget.dataset.value!)
         const filterText = event.currentTarget.textContent!
@@ -77,6 +78,12 @@ function MainPage() {
         }
         setState((prevState)=> ({...prevState,sort: sortTarget, sortItemState: sortValue, sortBy: sortBy}));
     }
+    const changeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.currentTarget.value;
+        if (value !== null) {
+            setState((prevState) => ({ ...prevState, search: value }));
+        }
+    };
     return (
         <div>
             <Header/>
@@ -84,14 +91,21 @@ function MainPage() {
                 <Sidebar
                     onChangeFilterType={changeFilterType}
                     onChangeFilterGenre={changeFilterGenre}
+                    onChangeSearch={changeSearch}
                     filterGenre={mainState.filterGenre}
                     filterType={mainState.filterType}
                     filterGenreArray={mainState.filterGenreArray}
                     filterTypeArray={mainState.filterTypeArray}
                     onChangeSort={changeSort}
                     sort={mainState.sortItemState}
-                ></Sidebar>
-                {<Catalog filterType={mainState.filterType} filterGenre={mainState.filterGenre} sortBy={mainState.sortBy} sort={mainState.sort}></Catalog>}
+                />
+                <Catalog
+                    filterType={mainState.filterType}
+                    filterGenre={mainState.filterGenre}
+                    sortBy={mainState.sortBy}
+                    sort={mainState.sort}
+                    search={mainState.search}
+                />
             </main>
         </div>
 
