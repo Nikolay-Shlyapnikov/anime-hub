@@ -123,7 +123,6 @@ function MainPage() {
     }, []);
 
     const userList = state.users.length > 0 ? (state.users as adminPanelInterface['users']).map((user, index) => {
-        console.log(state.users.length);
         return (
             <UserItem user={user} roles={state.roles}/>
         )
@@ -195,18 +194,21 @@ function MainPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body:JSON.stringify({
-                    search: value
+                    search: value,
+                    personId: userInfo.personId
                 })
             }
             try {
                 const response = await fetch(`${domain}/searchUser`, requestOptions);
                 const data = await response.json();
-                setState(prevState => {
-                    return {
-                        ...prevState,
-                        users: data
-                    };
-                });
+                if(data.length > 0){
+                    setState(prevState => {
+                        return {
+                            ...prevState,
+                            users: data
+                        };
+                    });
+                }
             } catch (error) {
                 console.log(error);
             }
